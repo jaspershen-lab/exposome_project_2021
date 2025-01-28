@@ -58,3 +58,4 @@ rsconnect/
 5_summary/
 2_data/genexpr.Rdata
 2_data/methy.Rdata
+3_data_analysis/1_transcriptome_data_analysis/data_preparation/expression_data
