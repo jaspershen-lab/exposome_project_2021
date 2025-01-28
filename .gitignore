@@ -56,3 +56,5 @@ rsconnect/
 
 5_summary
 5_summary/
+2_data/genexpr.Rdata
+2_data/methy.Rdata
