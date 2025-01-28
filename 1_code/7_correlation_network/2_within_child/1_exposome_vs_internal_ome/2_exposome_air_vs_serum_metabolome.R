@@ -4,92 +4,86 @@ no_function()
 setwd(r4projects::get_project_wd())
 library(tidyverse)
 rm(list = ls())
-source("1_code/tools.R")
+source("1_code/100_tools.R")
 
 ##load data
-###child exposome outdoor
+###child exposome air
 load(
-  "3_data_analysis/6_exposome_outdoor_data_analysis/data_preparation/expression_data"
+  "3_data_analysis/5_exposome_air_data_analysis/data_preparation/expression_data"
 )
-load("3_data_analysis/6_exposome_outdoor_data_analysis/data_preparation/sample_info")
-load("3_data_analysis/6_exposome_outdoor_data_analysis/data_preparation/variable_info")
+load("3_data_analysis/5_exposome_air_data_analysis/data_preparation/sample_info")
+load("3_data_analysis/5_exposome_air_data_analysis/data_preparation/variable_info")
 
-exposome_outdoor_variable_info <-
+exposome_air_variable_info <-
   variable_info
 
-exposome_outdoor_sample_info =
+exposome_air_sample_info =
   sample_info %>%
   dplyr::filter(stringr::str_detect(sample_id, pattern = "child"))
 
-exposome_outdoor_expression_data =
-  expression_data[, exposome_outdoor_sample_info$sample_id]
+exposome_air_expression_data =
+  expression_data[, exposome_air_sample_info$sample_id]
 
-remain_idx = 
-exposome_outdoor_expression_data %>%
+exposome_air_expression_data %>%
   apply(1, function(x) {
     sum(is.na(x))
-  }) %>% 
-  `==`(0) %>% 
-  which()
-
-exposome_outdoor_expression_data = exposome_outdoor_expression_data[remain_idx,]
-exposome_outdoor_variable_info = exposome_outdoor_variable_info[remain_idx,]
+  })
 
 ##load data
-###child transcriptome
+###child serum_metabolome
 load(
-  "3_data_analysis/1_transcriptome_data_analysis/data_preparation/expression_data"
+  "3_data_analysis/2_serum_metabolome_data_analysis/data_preparation/expression_data"
 )
-load("3_data_analysis/1_transcriptome_data_analysis/data_preparation/sample_info")
-load("3_data_analysis/1_transcriptome_data_analysis/data_preparation/variable_info")
+load("3_data_analysis/2_serum_metabolome_data_analysis/data_preparation/sample_info")
+load("3_data_analysis/2_serum_metabolome_data_analysis/data_preparation/variable_info")
 
-transcriptome_variable_info <-
+serum_metabolome_variable_info <-
   variable_info
 
-transcriptome_sample_info =
+serum_metabolome_sample_info =
   sample_info %>%
   dplyr::filter(stringr::str_detect(sample_id, pattern = "child"))
 
-transcriptome_expression_data =
-  expression_data[, transcriptome_sample_info$sample_id]
+serum_metabolome_expression_data =
+  expression_data[, serum_metabolome_sample_info$sample_id]
 
-transcriptome_expression_data %>%
+serum_metabolome_expression_data %>%
   apply(1, function(x) {
     sum(is.na(x))
   })
 
 setwd(r4projects::get_project_wd())
-dir.create("3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_transcriptome")
-setwd("3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_transcriptome")
+dir.create("3_data_analysis/correlation_network/within_child/exposome_air_vs_serum_metabolome")
+setwd("3_data_analysis/correlation_network/within_child/exposome_air_vs_serum_metabolome")
 
 ####only remain the overlapped samples
 sample_id =
-  intersect(exposome_outdoor_sample_info$sample_id,
-            transcriptome_sample_info$sample_id)
+  intersect(exposome_air_sample_info$sample_id,
+            serum_metabolome_sample_info$sample_id)
 
-exposome_outdoor_expression_data = 
-exposome_outdoor_expression_data[,sample_id]
+exposome_air_expression_data = 
+exposome_air_expression_data[,sample_id]
 
-exposome_outdoor_sample_info = 
-  exposome_outdoor_sample_info[match(sample_id, exposome_outdoor_sample_info$sample_id),]
+exposome_air_sample_info = 
+  exposome_air_sample_info[match(sample_id, exposome_air_sample_info$sample_id),]
 
-transcriptome_expression_data = 
-  transcriptome_expression_data[,sample_id]
+serum_metabolome_expression_data = 
+  serum_metabolome_expression_data[,sample_id]
 
-transcriptome_sample_info = 
-  transcriptome_sample_info[match(sample_id, transcriptome_sample_info$sample_id),]
+serum_metabolome_sample_info = 
+  serum_metabolome_sample_info[match(sample_id, serum_metabolome_sample_info$sample_id),]
 
-exposome_outdoor_sample_info$sample_id == transcriptome_sample_info$sample_id
+exposome_air_sample_info$sample_id == serum_metabolome_sample_info$sample_id
 
 ####data adjustment
 ###exposome have no need to adjust
-transcriptome_expression_data2 = 
-transcriptome_expression_data %>% 
+serum_metabolome_expression_data2 = 
+serum_metabolome_expression_data %>% 
   t() %>% 
   as.data.frame() %>% 
   purrr::map(function(x){
     temp_data = 
-      data.frame(x, exposome_outdoor_sample_info)
+      data.frame(x, exposome_air_sample_info)
     temp_data$Child.sex = as.numeric(temp_data$Child.sex)
     temp_data$Native = as.numeric(as.character(temp_data$Native))
     temp_data$Parity = as.numeric(as.character(temp_data$Parity))
@@ -102,17 +96,17 @@ transcriptome_expression_data %>%
   do.call(rbind, .) %>% 
   as.data.frame()
 
-colnames(transcriptome_expression_data2) = colnames(transcriptome_expression_data)
-rownames(transcriptome_expression_data2) = rownames(transcriptome_expression_data)
+colnames(serum_metabolome_expression_data2) = colnames(serum_metabolome_expression_data)
+rownames(serum_metabolome_expression_data2) = rownames(serum_metabolome_expression_data)
 
 #######correlation analysis
-dim(exposome_outdoor_expression_data)
-dim(transcriptome_expression_data2)
+dim(exposome_air_expression_data)
+dim(serum_metabolome_expression_data2)
 
-###calculate correlation between exposome and transcriptome
+###calculate correlation between exposome and serum_metabolome
 cor_value <-
-  cor(x = t(as.matrix(exposome_outdoor_expression_data)),
-      y = t(as.matrix(transcriptome_expression_data2)),
+  cor(x = t(as.matrix(exposome_air_expression_data)),
+      y = t(as.matrix(serum_metabolome_expression_data2)),
       method = "spearman")
 
 cor_value <-
@@ -125,8 +119,8 @@ library(plyr)
 
 p_value <-
   purrr::map(as.data.frame(t(cor_value)), .f = function(x){
-    value1 <- as.numeric(exposome_outdoor_expression_data[x[1],])
-    value2 <- as.numeric(transcriptome_expression_data2[x[2],])
+    value1 <- as.numeric(exposome_air_expression_data[x[1],])
+    value2 <- as.numeric(serum_metabolome_expression_data2[x[2],])
     cor.test(value1, value2, method = "spearman")$p.value
   }) %>%
   unlist()
@@ -157,7 +151,7 @@ library(igraph)
 library(ggraph)
 library(tidygraph)
 
-###network for all the exposome_outdoor and transcriptome
+###network for all the exposome_air and serum_metabolome
 edge_data <-  
   cor_value %>% 
   # dplyr::filter(from %in% cluster1) %>%
@@ -174,8 +168,8 @@ node_data <-
   tidyr::pivot_longer(cols = c(from, to), 
                       names_to = "class", values_to = "node") %>% 
   dplyr::mutate(class1 = case_when(
-    stringr::str_detect(class, "from") ~ "Exposome_outdoor",
-    TRUE ~ "Transcriptome"
+    stringr::str_detect(class, "from") ~ "Exposome_air",
+    TRUE ~ "Serum_metabolome"
   )) %>% 
   dplyr::select(node, class1) %>% 
   dplyr::rename(Class = class1) %>%
@@ -241,13 +235,13 @@ plot1
 
 ggsave(
   plot1,
-  filename = "exposome_outdoor_transcriptome_correlation_network.pdf",
+  filename = "exposome_air_serum_metabolome_correlation_network.pdf",
   width = 8.5,
   height = 7,
   bg = "transparent"
 )
 
-# ###pathway enrichment for transcriptome
+# ###pathway enrichment for serum_metabolome
 # library(clusterProfiler)
 # 
 # protein_list <-

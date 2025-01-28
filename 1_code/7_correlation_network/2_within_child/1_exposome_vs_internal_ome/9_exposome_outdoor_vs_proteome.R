@@ -4,29 +4,36 @@ no_function()
 setwd(r4projects::get_project_wd())
 library(tidyverse)
 rm(list = ls())
+source("1_code/100_tools.R")
 
 ##load data
-###child exposome chemical
+###child exposome outdoor
 load(
-  "3_data_analysis/4_exposome_chemical_data_analysis/data_preparation/expression_data"
+  "3_data_analysis/6_exposome_outdoor_data_analysis/data_preparation/expression_data"
 )
-load("3_data_analysis/4_exposome_chemical_data_analysis/data_preparation/sample_info")
-load("3_data_analysis/4_exposome_chemical_data_analysis/data_preparation/variable_info")
+load("3_data_analysis/6_exposome_outdoor_data_analysis/data_preparation/sample_info")
+load("3_data_analysis/6_exposome_outdoor_data_analysis/data_preparation/variable_info")
 
-exposome_chemical_variable_info <-
+exposome_outdoor_variable_info <-
   variable_info
 
-exposome_chemical_sample_info =
+exposome_outdoor_sample_info =
   sample_info %>%
   dplyr::filter(stringr::str_detect(sample_id, pattern = "child"))
 
-exposome_chemical_expression_data =
-  expression_data[, exposome_chemical_sample_info$sample_id]
+exposome_outdoor_expression_data =
+  expression_data[, exposome_outdoor_sample_info$sample_id]
 
-exposome_chemical_expression_data %>%
+remain_idx = 
+exposome_outdoor_expression_data %>%
   apply(1, function(x) {
     sum(is.na(x))
-  })
+  }) %>% 
+  `==`(0) %>% 
+  which()
+
+exposome_outdoor_expression_data = exposome_outdoor_expression_data[remain_idx,]
+exposome_outdoor_variable_info = exposome_outdoor_variable_info[remain_idx,]
 
 ##load data
 ###child proteome
@@ -52,18 +59,19 @@ proteome_expression_data %>%
   })
 
 setwd(r4projects::get_project_wd())
-setwd("3_data_analysis/correlation_network/within_child/exposome_chemical_vs_proteome")
+dir.create("3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_proteome")
+setwd("3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_proteome")
 
 ####only remain the overlapped samples
 sample_id =
-  intersect(exposome_chemical_sample_info$sample_id,
+  intersect(exposome_outdoor_sample_info$sample_id,
             proteome_sample_info$sample_id)
 
-exposome_chemical_expression_data = 
-exposome_chemical_expression_data[,sample_id]
+exposome_outdoor_expression_data = 
+exposome_outdoor_expression_data[,sample_id]
 
-exposome_chemical_sample_info = 
-  exposome_chemical_sample_info[match(sample_id, exposome_chemical_sample_info$sample_id),]
+exposome_outdoor_sample_info = 
+  exposome_outdoor_sample_info[match(sample_id, exposome_outdoor_sample_info$sample_id),]
 
 proteome_expression_data = 
   proteome_expression_data[,sample_id]
@@ -71,8 +79,7 @@ proteome_expression_data =
 proteome_sample_info = 
   proteome_sample_info[match(sample_id, proteome_sample_info$sample_id),]
 
-exposome_chemical_sample_info$sample_id == proteome_sample_info$sample_id
-
+exposome_outdoor_sample_info$sample_id == proteome_sample_info$sample_id
 
 ####data adjustment
 ###exposome have no need to adjust
@@ -82,7 +89,7 @@ proteome_expression_data %>%
   as.data.frame() %>% 
   purrr::map(function(x){
     temp_data = 
-      data.frame(x, exposome_chemical_sample_info)
+      data.frame(x, exposome_outdoor_sample_info)
     temp_data$Child.sex = as.numeric(temp_data$Child.sex)
     temp_data$Native = as.numeric(as.character(temp_data$Native))
     temp_data$Parity = as.numeric(as.character(temp_data$Parity))
@@ -98,14 +105,13 @@ proteome_expression_data %>%
 colnames(proteome_expression_data2) = colnames(proteome_expression_data)
 rownames(proteome_expression_data2) = rownames(proteome_expression_data)
 
-
 #######correlation analysis
-dim(exposome_chemical_expression_data)
+dim(exposome_outdoor_expression_data)
 dim(proteome_expression_data2)
 
-####calculate correlation between exposome and proteome
+###calculate correlation between exposome and proteome
 cor_value <-
-  cor(x = t(as.matrix(exposome_chemical_expression_data)),
+  cor(x = t(as.matrix(exposome_outdoor_expression_data)),
       y = t(as.matrix(proteome_expression_data2)),
       method = "spearman")
 
@@ -119,7 +125,7 @@ library(plyr)
 
 p_value <-
   purrr::map(as.data.frame(t(cor_value)), .f = function(x){
-    value1 <- as.numeric(exposome_chemical_expression_data[x[1],])
+    value1 <- as.numeric(exposome_outdoor_expression_data[x[1],])
     value2 <- as.numeric(proteome_expression_data2[x[2],])
     cor.test(value1, value2, method = "spearman")$p.value
   }) %>%
@@ -132,8 +138,8 @@ plot(density(cor_value$p_value))
 
 cor_value$p.adjust = p.adjust(cor_value$p_value, method = "BH")
 
-cor_value = 
-cor_value %>% 
+cor_value =
+cor_value %>%
   dplyr::filter(p.adjust < 0.05)
 
 dim(cor_value)
@@ -151,7 +157,7 @@ library(igraph)
 library(ggraph)
 library(tidygraph)
 
-###network for all the exposome_chemical and proteome
+###network for all the exposome_outdoor and proteome
 edge_data <-  
   cor_value %>% 
   # dplyr::filter(from %in% cluster1) %>%
@@ -168,7 +174,7 @@ node_data <-
   tidyr::pivot_longer(cols = c(from, to), 
                       names_to = "class", values_to = "node") %>% 
   dplyr::mutate(class1 = case_when(
-    stringr::str_detect(class, "from") ~ "Exposome",
+    stringr::str_detect(class, "from") ~ "Exposome_outdoor",
     TRUE ~ "Proteome"
   )) %>% 
   dplyr::select(node, class1) %>% 
@@ -186,7 +192,9 @@ temp_data <-
   dplyr::mutate(Degree = centrality_degree(mode = 'all'))
 
 pal <-
-  wesanderson::wes_palette(name = "Zissou1", n = 100, type = "continuous")
+  wesanderson::wes_palette(name = "Zissou1",
+                           n = 100,
+                           type = "continuous")
 
 plot1 <-
   ggraph(temp_data,
@@ -198,14 +206,8 @@ plot1 <-
                       size = Degree),
                   shape = 21,
                   show.legend = TRUE) +
-  scale_fill_manual(values = c(
-    "Exposome" = ggsci::pal_d3()(10)[2],
-    "Proteome" = ggsci::pal_d3()(10)[4]
-  )) +
-  scale_color_manual(values = c(
-    "Exposome" = ggsci::pal_d3()(10)[2],
-    "Proteome" = ggsci::pal_d3()(10)[4]
-  )) +
+  scale_fill_manual(values = omics_color) +
+  scale_color_manual(values = omics_color) +
   geom_node_text(
     aes(
       x = x * 1.05,
@@ -239,7 +241,7 @@ plot1
 
 ggsave(
   plot1,
-  filename = "exposome_chemical_proteome_correlation_network.pdf",
+  filename = "exposome_outdoor_proteome_correlation_network.pdf",
   width = 8.5,
   height = 7,
   bg = "transparent"

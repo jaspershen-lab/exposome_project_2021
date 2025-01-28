@@ -4,59 +4,84 @@ no_function()
 setwd(r4projects::get_project_wd())
 library(tidyverse)
 rm(list = ls())
-source("1_code/tools.R")
+source("1_code/100_tools.R")
 
 ###load data
-load("3_data_analysis/correlation_network/within_child/exposome_air_vs_transcriptome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_air_vs_transcriptome/cor_value"
+)
 exposome_air_vs_transcriptome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_air_vs_proteome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_air_vs_proteome/cor_value"
+)
 exposome_air_vs_proteome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_air_vs_serum_metabolome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_air_vs_serum_metabolome/cor_value"
+)
 exposome_air_vs_serum_metabolome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_air_vs_urine_metabolome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_air_vs_urine_metabolome/cor_value"
+)
 exposome_air_vs_urine_metabolome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_transcriptome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_transcriptome/cor_value"
+)
 exposome_outdoor_vs_transcriptome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_proteome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_proteome/cor_value"
+)
 exposome_outdoor_vs_proteome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_serum_metabolome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_serum_metabolome/cor_value"
+)
 exposome_outdoor_vs_serum_metabolome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_urine_metabolome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_outdoor_vs_urine_metabolome/cor_value"
+)
 exposome_outdoor_vs_urine_metabolome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_chemical_vs_transcriptome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_chemical_vs_transcriptome/cor_value"
+)
 exposome_chemical_vs_transcriptome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_chemical_vs_proteome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_chemical_vs_proteome/cor_value"
+)
 exposome_chemical_vs_proteome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_chemical_vs_serum_metabolome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_chemical_vs_serum_metabolome/cor_value"
+)
 exposome_chemical_vs_serum_metabolome_cor = cor_value
 
-load("3_data_analysis/correlation_network/within_child/exposome_chemical_vs_urine_metabolome/cor_value")
+load(
+  "3_data_analysis/correlation_network/within_child/exposome_chemical_vs_urine_metabolome/cor_value"
+)
 exposome_chemical_vs_urine_metabolome_cor = cor_value
 
-exposome_internal_omics_cor = 
-  rbind(exposome_air_vs_transcriptome_cor,
-        exposome_air_vs_proteome_cor,
-        exposome_air_vs_serum_metabolome_cor,
-        exposome_air_vs_urine_metabolome_cor,
-        exposome_outdoor_vs_transcriptome_cor,
-        exposome_outdoor_vs_proteome_cor,
-        exposome_outdoor_vs_serum_metabolome_cor,
-        exposome_outdoor_vs_urine_metabolome_cor,
-        exposome_chemical_vs_transcriptome_cor,
-        exposome_chemical_vs_proteome_cor,
-        exposome_chemical_vs_serum_metabolome_cor,
-        exposome_chemical_vs_urine_metabolome_cor
-        )
+exposome_internal_omics_cor =
+  rbind(
+    exposome_air_vs_transcriptome_cor,
+    exposome_air_vs_proteome_cor,
+    exposome_air_vs_serum_metabolome_cor,
+    exposome_air_vs_urine_metabolome_cor,
+    exposome_outdoor_vs_transcriptome_cor,
+    exposome_outdoor_vs_proteome_cor,
+    exposome_outdoor_vs_serum_metabolome_cor,
+    exposome_outdoor_vs_urine_metabolome_cor,
+    exposome_chemical_vs_transcriptome_cor,
+    exposome_chemical_vs_proteome_cor,
+    exposome_chemical_vs_serum_metabolome_cor,
+    exposome_chemical_vs_urine_metabolome_cor
+  )
 
 dim(exposome_internal_omics_cor)
 
@@ -67,24 +92,35 @@ transcriptome_variable_info = variable_info
 load("3_data_analysis/8_proteome_data_analysis/data_preparation/variable_info")
 proteome_variable_info = variable_info
 
-load("3_data_analysis/2_serum_metabolome_data_analysis/data_preparation/variable_info")
+load(
+  "3_data_analysis/2_serum_metabolome_data_analysis/data_preparation/variable_info"
+)
 serum_metabolome_variable_info = variable_info
 
-load("3_data_analysis/3_urine_metabolome_data_analysis/data_preparation/variable_info")
+load(
+  "3_data_analysis/3_urine_metabolome_data_analysis/data_preparation/variable_info"
+)
 urine_metabolome_variable_info = variable_info
 
 load("3_data_analysis/5_exposome_air_data_analysis/data_preparation/variable_info")
 exposome_air_variable_info = variable_info
 
-load("3_data_analysis/6_exposome_outdoor_data_analysis/data_preparation/variable_info")
+load(
+  "3_data_analysis/6_exposome_outdoor_data_analysis/data_preparation/variable_info"
+)
 exposome_outdoor_variable_info = variable_info
 
-load("3_data_analysis/4_exposome_chemical_data_analysis/data_preparation/variable_info")
+load(
+  "3_data_analysis/4_exposome_chemical_data_analysis/data_preparation/variable_info"
+)
 exposome_chemical_variable_info = variable_info
 
 
 setwd(r4projects::get_project_wd())
-dir.create("3_data_analysis/correlation_network/within_child/exposome_vs_internal_omics", showWarnings = FALSE)
+dir.create(
+  "3_data_analysis/correlation_network/within_child/exposome_vs_internal_omics",
+  showWarnings = FALSE
+)
 setwd("3_data_analysis/correlation_network/within_child/exposome_vs_internal_omics")
 
 # save(exposome_internal_omics_cor, file = "exposome_internal_omics_cor")
@@ -93,15 +129,12 @@ library(igraph)
 library(ggraph)
 library(tidygraph)
 
-
 edge_data <-
   exposome_internal_omics_cor %>%
   dplyr::rename(from = from,
                 to = to,
                 Correlation = cor) %>%
   dplyr::mutate(p.adjust = -log(p.adjust, 10))
-
-
 
 node_data <-
   exposome_internal_omics_cor %>%
@@ -135,64 +168,49 @@ node_data <-
       "Urine_metabolome",
       "Serum_metabolome"
     )
-  )) %>% 
-  dplyr::left_join(exposome_air_variable_info[,c("variable_id", "description")],
-                   by = c("node" = "variable_id")) %>% 
-  dplyr::mutate(true_name = case_when(!is.na(description) ~ description,
-                                      TRUE ~ node)) %>%
-  dplyr::select(-description) %>% 
-  dplyr::left_join(exposome_outdoor_variable_info[, c("variable_id", "labels")],
-                   by = c("node" = "variable_id")) %>%
-  dplyr::mutate(true_name = case_when(!is.na(labels) ~ labels,
-                                      TRUE ~ true_name)) %>% 
-  dplyr::select(-labels) %>% 
-  dplyr::left_join(exposome_chemical_variable_info[, c("variable_id", "labels")],
-                   by = c("node" = "variable_id")) %>%
-  dplyr::mutate(true_name = case_when(!is.na(labels) ~ labels,
-                                      TRUE ~ true_name)) %>% 
-  dplyr::select(-labels) %>% 
-  dplyr::left_join(transcriptome_variable_info[, c("variable_id", "GeneSymbol_Affy")],
-                   by = c("node" = "variable_id")) %>%
-  dplyr::mutate(true_name = case_when(!is.na(GeneSymbol_Affy) ~ GeneSymbol_Affy,
-                                      TRUE ~ true_name)) %>% 
-  dplyr::select(-GeneSymbol_Affy) %>% 
-  dplyr::left_join(proteome_variable_info[, c("variable_id", "Gene_Symbol")],
-                   by = c("node" = "variable_id")) %>%
-  dplyr::mutate(true_name = case_when(!is.na(Gene_Symbol) ~ Gene_Symbol,
-                                      TRUE ~ true_name)) %>% 
-  dplyr::select(-Gene_Symbol) %>% 
-  dplyr::left_join(serum_metabolome_variable_info[, c("variable_id", "var")],
-                   by = c("node" = "variable_id")) %>%
-  dplyr::mutate(true_name = case_when(!is.na(var) ~ var,
-                                      TRUE ~ true_name)) %>% 
-  dplyr::select(-var)  %>% 
-  dplyr::left_join(urine_metabolome_variable_info[, c("variable_id", "var")],
-                   by = c("node" = "variable_id")) %>%
-  dplyr::mutate(true_name = case_when(!is.na(var) ~ var,
-                                      TRUE ~ true_name)) %>% 
-  dplyr::select(-var) 
+  )) %>%
+  dplyr::left_join(exposome_air_variable_info[, c("variable_id", "description")], by = c("node" = "variable_id")) %>%
+  dplyr::mutate(true_name = case_when(!is.na(description) ~ description, TRUE ~ node)) %>%
+  dplyr::select(-description) %>%
+  dplyr::left_join(exposome_outdoor_variable_info[, c("variable_id", "labels")], by = c("node" = "variable_id")) %>%
+  dplyr::mutate(true_name = case_when(!is.na(labels) ~ labels, TRUE ~ true_name)) %>%
+  dplyr::select(-labels) %>%
+  dplyr::left_join(exposome_chemical_variable_info[, c("variable_id", "labels")], by = c("node" = "variable_id")) %>%
+  dplyr::mutate(true_name = case_when(!is.na(labels) ~ labels, TRUE ~ true_name)) %>%
+  dplyr::select(-labels) %>%
+  dplyr::left_join(transcriptome_variable_info[, c("variable_id", "GeneSymbol_Affy")], by = c("node" = "variable_id")) %>%
+  dplyr::mutate(true_name = case_when(!is.na(GeneSymbol_Affy) ~ GeneSymbol_Affy, TRUE ~ true_name)) %>%
+  dplyr::select(-GeneSymbol_Affy) %>%
+  dplyr::left_join(proteome_variable_info[, c("variable_id", "Gene_Symbol")], by = c("node" = "variable_id")) %>%
+  dplyr::mutate(true_name = case_when(!is.na(Gene_Symbol) ~ Gene_Symbol, TRUE ~ true_name)) %>%
+  dplyr::select(-Gene_Symbol) %>%
+  dplyr::left_join(serum_metabolome_variable_info[, c("variable_id", "var")], by = c("node" = "variable_id")) %>%
+  dplyr::mutate(true_name = case_when(!is.na(var) ~ var, TRUE ~ true_name)) %>%
+  dplyr::select(-var)  %>%
+  dplyr::left_join(urine_metabolome_variable_info[, c("variable_id", "var")], by = c("node" = "variable_id")) %>%
+  dplyr::mutate(true_name = case_when(!is.na(var) ~ var, TRUE ~ true_name)) %>%
+  dplyr::select(-var)
 
-node_data %>% 
+node_data %>%
   dplyr::filter(Class == "Exposome_air")
 
-node_data %>% 
+node_data %>%
   dplyr::filter(Class == "Exposome_chemical")
 
-node_data %>% 
+node_data %>%
   dplyr::filter(Class == "Exposome_outdoor")
 
-node_data %>% 
+node_data %>%
   dplyr::filter(Class == "Proteome")
 
-node_data %>% 
+node_data %>%
   dplyr::filter(Class == "Serum_metabolome")
 
-node_data %>% 
+node_data %>%
   dplyr::filter(Class == "Transcriptome")
 
-node_data %>% 
+node_data %>%
   dplyr::filter(Class == "Urine_metabolome")
-
 
 ####output node data and edge data
 library(openxlsx)
@@ -200,15 +218,30 @@ wb = createWorkbook()
 modifyBaseFont(wb, fontSize = 12, fontName = "Arial Narrow")
 addWorksheet(wb, sheetName = "Node information", gridLines = TRUE)
 addWorksheet(wb, sheetName = "Edge information", gridLines = TRUE)
-freezePane(wb, sheet = 1, firstRow = TRUE, firstCol = TRUE) 
-freezePane(wb, sheet = 2, firstRow = TRUE, firstCol = TRUE) 
-writeDataTable(wb, sheet = 1, x = node_data,
-               colNames = TRUE, rowNames = FALSE)
-writeDataTable(wb, sheet = 2, x = edge_data %>% dplyr::select(from, to, everything()),
-               colNames = TRUE, rowNames = FALSE)
+freezePane(wb,
+           sheet = 1,
+           firstRow = TRUE,
+           firstCol = TRUE)
+freezePane(wb,
+           sheet = 2,
+           firstRow = TRUE,
+           firstCol = TRUE)
+writeDataTable(
+  wb,
+  sheet = 1,
+  x = node_data,
+  colNames = TRUE,
+  rowNames = FALSE
+)
+writeDataTable(
+  wb,
+  sheet = 2,
+  x = edge_data %>% dplyr::select(from, to, everything()),
+  colNames = TRUE,
+  rowNames = FALSE
+)
 
 saveWorkbook(wb, "exposome_internal_ome_network.xlsx", overwrite = TRUE)
-
 
 alpha_value <-
   c(
@@ -221,7 +254,6 @@ alpha_value <-
     "Transcriptome" = 1
   )
 
-
 total_graph <-
   tidygraph::tbl_graph(nodes = node_data,
                        edges = edge_data,
@@ -232,15 +264,12 @@ pal <-
   wesanderson::wes_palette(name = "Zissou1", n = 100, type = "continuous")
 
 plot <-
-  ggraph(total_graph,
-         layout = 'stress') +
+  ggraph(total_graph, layout = 'stress') +
   geom_edge_link(aes(color = Correlation),
                  show.legend = TRUE,
                  alpha = 0.5) +
   geom_node_point(
-    aes(fill = Class,
-        size = Degree,
-        alpha = Class),
+    aes(fill = Class, size = Degree, alpha = Class),
     shape = 21,
     # alpha = 0.6,
     show.legend = TRUE
@@ -259,19 +288,18 @@ plot <-
   #     colour = Class
   #   ),
   #   size = 3,
-#   alpha = 1,
-#   show.legend = FALSE
-# ) +
-guides(
-  edge_width = guide_legend(title = "-log10(FDR adjusted P value)",
-                            override.aes = list(shape = NA)),
-  edge_color = ggraph::guide_edge_colorbar(title = "Spearman correlation"),
-  fill = guide_legend(
-    title = "Class",
-    override.aes = list(size = 7, linetype = "blank")
-  ),
-  size = guide_legend(title = "Degree", override.aes = list(linetype = 0))
-) +
+  #   alpha = 1,
+  #   show.legend = FALSE
+  # ) +
+  guides(
+    edge_width = guide_legend(title = "-log10(FDR adjusted P value)", override.aes = list(shape = NA)),
+    edge_color = ggraph::guide_edge_colorbar(title = "Spearman correlation"),
+    fill = guide_legend(
+      title = "Class",
+      override.aes = list(size = 7, linetype = "blank")
+    ),
+    size = guide_legend(title = "Degree", override.aes = list(linetype = 0))
+  ) +
   ggraph::scale_edge_color_gradientn(colours = pal) +
   ggraph::scale_edge_width(range = c(0.2, 2)) +
   scale_size_continuous(range = c(0.5, 5)) +
@@ -284,7 +312,7 @@ guides(
 plot
 
 
-# save(total_graph, file = "total_graph")
+save(total_graph, file = "total_graph")
 load("total_graph")
 
 ggsave(
@@ -295,19 +323,9 @@ ggsave(
   bg = "transparent"
 )
 
-
-
-
-
-
-
-
-
-
 sum(edge_data$from %in% node_data$node[node_data$Class == "Exposome_air"])
 sum(edge_data$from %in% node_data$node[node_data$Class == "Exposome_chemical"])
 sum(edge_data$from %in% node_data$node[node_data$Class == "Exposome_outdoor"])
-
 
 sum(edge_data$to %in% node_data$node[node_data$Class == "Transcriptome"])
 sum(edge_data$to %in% node_data$node[node_data$Class == "Proteome"])
@@ -382,7 +400,9 @@ plot <-
                            color = "black",
                            show.legend = FALSE) +
   ggalluvial::geom_flow(show.legend = FALSE) +
-  geom_text(stat = "stratum", size = 5, color = "white") +
+  geom_text(stat = "stratum",
+            size = 5,
+            color = "white") +
   labs(x = "", y = "") +
   scale_fill_manual(values = omics_color) +
   theme_bw() +
@@ -439,14 +459,12 @@ plot <-
 
 plot
 
-# ggsave(
-#   plot,
-#   file = file.path("node_information.pdf"),
-#   width = 5,
-#   height = 7,
-#   bg = "transparent"
-# )
+ggsave(
+  plot,
+  file = file.path("node_information.pdf"),
+  width = 5,
+  height = 7,
+  bg = "transparent"
+)
 
 total_graph
-
-

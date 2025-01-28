@@ -4,7 +4,7 @@ no_function()
 setwd(r4projects::get_project_wd())
 library(tidyverse)
 rm(list = ls())
-source("1_code/tools.R")
+source("1_code/100_tools.R")
 
 ##load data
 ###load the variable information of all omics data
@@ -108,7 +108,7 @@ ggplot(aes(x = 2, y = n, fill = class2)) +
 
 plot
 
-# ggsave(plot, filename = "Behavior_phenotype.pdf", width = 7, height = 7)
+ggsave(plot, filename = "Behavior_phenotype.pdf", width = 7, height = 7)
 
 temp_data %>% 
   dplyr::filter(phenotype == "Behavior") %>% 
@@ -141,7 +141,7 @@ plot =
 
 plot
 
-# ggsave(plot, filename = "Body.mass.index.z.score_phenotype.pdf", width = 7, height = 7)
+ggsave(plot, filename = "Body.mass.index.z.score_phenotype.pdf", width = 7, height = 7)
 
 temp_data %>% 
   dplyr::filter(phenotype == "Body.mass.index.z.score") %>% 
@@ -174,7 +174,7 @@ plot =
 
 plot
 
-# ggsave(plot, filename = "Intelligence.quotient_phenotype.pdf", width = 7, height = 7)
+ggsave(plot, filename = "Intelligence.quotient_phenotype.pdf", width = 7, height = 7)
 
 temp_data %>% 
   dplyr::filter(phenotype == "Intelligence.quotient") %>% 
@@ -220,7 +220,7 @@ temp_data %>%
 
 plot
 
-# ggsave(plot, filename = "alluvium.pdf", width = 10, height = 7)  
+ggsave(plot, filename = "alluvium.pdf", width = 10, height = 7)
 
 exposome_phenotype_glm %>% 
   dplyr::filter(p.adjust < 0.05) %>% 
@@ -263,7 +263,7 @@ ggvenn(
   text_color = "white"
 )
 plot
-# ggsave(plot, filename = "venn.pdf", width = 7, height = 7)
+ggsave(plot, filename = "venn.pdf", width = 7, height = 7)
 
 
 
@@ -355,18 +355,18 @@ node_data <-
 
 ####output node data and edge data
 library(openxlsx)
-# wb = createWorkbook()
-# modifyBaseFont(wb, fontSize = 12, fontName = "Arial Narrow")
-# addWorksheet(wb, sheetName = "Node information", gridLines = TRUE)
-# addWorksheet(wb, sheetName = "Edge information", gridLines = TRUE)
-# freezePane(wb, sheet = 1, firstRow = TRUE, firstCol = TRUE)
-# freezePane(wb, sheet = 2, firstRow = TRUE, firstCol = TRUE)
-# writeDataTable(wb, sheet = 1, x = node_data,
-#                colNames = TRUE, rowNames = FALSE)
-# writeDataTable(wb, sheet = 2, x = edge_data %>% dplyr::select(from, to, everything()),
-#                colNames = TRUE, rowNames = FALSE)
-# 
-# saveWorkbook(wb, "exposome_internal_ome_network.xlsx", overwrite = TRUE)
+wb = createWorkbook()
+modifyBaseFont(wb, fontSize = 12, fontName = "Arial Narrow")
+addWorksheet(wb, sheetName = "Node information", gridLines = TRUE)
+addWorksheet(wb, sheetName = "Edge information", gridLines = TRUE)
+freezePane(wb, sheet = 1, firstRow = TRUE, firstCol = TRUE)
+freezePane(wb, sheet = 2, firstRow = TRUE, firstCol = TRUE)
+writeDataTable(wb, sheet = 1, x = node_data,
+               colNames = TRUE, rowNames = FALSE)
+writeDataTable(wb, sheet = 2, x = edge_data %>% dplyr::select(from, to, everything()),
+               colNames = TRUE, rowNames = FALSE)
+
+saveWorkbook(wb, "exposome_internal_ome_network.xlsx", overwrite = TRUE)
 
 total_graph <-
   tidygraph::tbl_graph(nodes = node_data,
@@ -440,13 +440,13 @@ plot
 save(total_graph, file = "total_graph")
 load("total_graph")
 
-# ggsave(
-#   plot,
-#   filename = "exposome_phenotype_correlation_network.pdf",
-#   width = 8.5,
-#   height = 7,
-#   bg = "transparent"
-# )
+ggsave(
+  plot,
+  filename = "exposome_phenotype_correlation_network.pdf",
+  width = 8.5,
+  height = 7,
+  bg = "transparent"
+)
 
 
 

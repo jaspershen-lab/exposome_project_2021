@@ -4,7 +4,7 @@ no_function()
 setwd(r4projects::get_project_wd())
 library(tidyverse)
 rm(list = ls())
-source("1_code/tools.R")
+source("1_code/100_tools.R")
 
 ##load data
 ###child exposome chemical
@@ -30,35 +30,35 @@ exposome_chemical_expression_data %>%
   })
 
 ##load data
-###child transcriptome
+###child urine metabolome
 load(
-  "3_data_analysis/1_transcriptome_data_analysis/data_preparation/expression_data"
+  "3_data_analysis/3_urine_metabolome_data_analysis/data_preparation/expression_data"
 )
-load("3_data_analysis/1_transcriptome_data_analysis/data_preparation/sample_info")
-load("3_data_analysis/1_transcriptome_data_analysis/data_preparation/variable_info")
+load("3_data_analysis/3_urine_metabolome_data_analysis/data_preparation/sample_info")
+load("3_data_analysis/3_urine_metabolome_data_analysis/data_preparation/variable_info")
 
-transcriptome_variable_info <-
+urine_metabolome_variable_info <-
   variable_info
 
-transcriptome_sample_info =
+urine_metabolome_sample_info =
   sample_info %>%
   dplyr::filter(stringr::str_detect(sample_id, pattern = "child"))
 
-transcriptome_expression_data =
-  expression_data[, transcriptome_sample_info$sample_id]
+urine_metabolome_expression_data =
+  expression_data[, urine_metabolome_sample_info$sample_id]
 
-transcriptome_expression_data %>%
+urine_metabolome_expression_data %>%
   apply(1, function(x) {
     sum(is.na(x))
   })
 
 setwd(r4projects::get_project_wd())
-setwd("3_data_analysis/correlation_network/within_child/exposome_chemical_vs_transcriptome")
+setwd("3_data_analysis/correlation_network/within_child/exposome_chemical_vs_urine_metabolome")
 
 ####only remain the overlapped samples
 sample_id =
   intersect(exposome_chemical_sample_info$sample_id,
-            transcriptome_sample_info$sample_id)
+            urine_metabolome_sample_info$sample_id)
 
 exposome_chemical_expression_data = 
 exposome_chemical_expression_data[,sample_id]
@@ -66,18 +66,18 @@ exposome_chemical_expression_data[,sample_id]
 exposome_chemical_sample_info = 
   exposome_chemical_sample_info[match(sample_id, exposome_chemical_sample_info$sample_id),]
 
-transcriptome_expression_data = 
-  transcriptome_expression_data[,sample_id]
+urine_metabolome_expression_data = 
+  urine_metabolome_expression_data[,sample_id]
 
-transcriptome_sample_info = 
-  transcriptome_sample_info[match(sample_id, transcriptome_sample_info$sample_id),]
+urine_metabolome_sample_info = 
+  urine_metabolome_sample_info[match(sample_id, urine_metabolome_sample_info$sample_id),]
 
-exposome_chemical_sample_info$sample_id == transcriptome_sample_info$sample_id
+exposome_chemical_sample_info$sample_id == urine_metabolome_sample_info$sample_id
 
 ####data adjustment
 ###exposome have no need to adjust
-transcriptome_expression_data2 = 
-transcriptome_expression_data %>% 
+urine_metabolome_expression_data2 = 
+urine_metabolome_expression_data %>% 
   t() %>% 
   as.data.frame() %>% 
   purrr::map(function(x){
@@ -95,49 +95,49 @@ transcriptome_expression_data %>%
   do.call(rbind, .) %>% 
   as.data.frame()
 
-colnames(transcriptome_expression_data2) = colnames(transcriptome_expression_data)
-rownames(transcriptome_expression_data2) = rownames(transcriptome_expression_data)
+colnames(urine_metabolome_expression_data2) = colnames(urine_metabolome_expression_data)
+rownames(urine_metabolome_expression_data2) = rownames(urine_metabolome_expression_data)
 
 #######correlation analysis
 dim(exposome_chemical_expression_data)
-dim(transcriptome_expression_data2)
+dim(urine_metabolome_expression_data2)
 
-# ###calculate correlation between exposome and transcriptome
-# cor_value <-
-#   cor(x = t(as.matrix(exposome_chemical_expression_data)),
-#       y = t(as.matrix(transcriptome_expression_data2)),
-#       method = "spearman")
-# 
-# cor_value <-
-#   cor_value %>%
-#   as.data.frame() %>%
-#   tibble::rownames_to_column(var = "from") %>%
-#   tidyr::pivot_longer(-from, names_to = "to", values_to = "cor")
-# 
-# library(plyr)
-# 
-# p_value <-
-#   purrr::map(as.data.frame(t(cor_value)), .f = function(x){
-#     value1 <- as.numeric(exposome_chemical_expression_data[x[1],])
-#     value2 <- as.numeric(transcriptome_expression_data2[x[2],])
-#     cor.test(value1, value2, method = "spearman")$p.value
-#   }) %>%
-#   unlist()
-# 
-# cor_value <-
-#   data.frame(cor_value, p_value, stringsAsFactors = FALSE)
-# 
-# plot(density(cor_value$p_value))
-# 
-# cor_value$p.adjust = p.adjust(cor_value$p_value, method = "BH")
-# 
-# cor_value =
-# cor_value %>%
-#   dplyr::filter(p.adjust < 0.05)
-# 
-# dim(cor_value)
-# 
-# save(cor_value, file = "cor_value")
+###calculate correlation between exposome and urine_metabolome
+cor_value <-
+  cor(x = t(as.matrix(exposome_chemical_expression_data)),
+      y = t(as.matrix(urine_metabolome_expression_data2)),
+      method = "spearman")
+
+cor_value <-
+  cor_value %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column(var = "from") %>%
+  tidyr::pivot_longer(-from, names_to = "to", values_to = "cor")
+
+library(plyr)
+
+p_value <-
+  purrr::map(as.data.frame(t(cor_value)), .f = function(x){
+    value1 <- as.numeric(exposome_chemical_expression_data[x[1],])
+    value2 <- as.numeric(urine_metabolome_expression_data2[x[2],])
+    cor.test(value1, value2, method = "spearman")$p.value
+  }) %>%
+  unlist()
+
+cor_value <-
+  data.frame(cor_value, p_value, stringsAsFactors = FALSE)
+
+plot(density(cor_value$p_value))
+
+cor_value$p.adjust = p.adjust(cor_value$p_value, method = "BH")
+
+cor_value =
+cor_value %>%
+  dplyr::filter(p.adjust < 0.05)
+
+dim(cor_value)
+
+save(cor_value, file = "cor_value")
 load('cor_value')
 
 cor_value$from %>% unique()
@@ -150,7 +150,7 @@ library(igraph)
 library(ggraph)
 library(tidygraph)
 
-###network for all the exposome_chemical and transcriptome
+###network for all the exposome_chemical and urine_metabolome
 edge_data <-  
   cor_value %>% 
   # dplyr::filter(from %in% cluster1) %>%
@@ -168,7 +168,7 @@ node_data <-
                       names_to = "class", values_to = "node") %>% 
   dplyr::mutate(class1 = case_when(
     stringr::str_detect(class, "from") ~ "Exposome_chemical",
-    TRUE ~ "Transcriptome"
+    TRUE ~ "Urine_metabolome"
   )) %>% 
   dplyr::select(node, class1) %>% 
   dplyr::rename(Class = class1) %>%
@@ -234,13 +234,13 @@ plot1
 
 ggsave(
   plot1,
-  filename = "exposome_chemical_transcriptome_correlation_network.pdf",
+  filename = "exposome_chemical_urine_metabolome_correlation_network.pdf",
   width = 8.5,
   height = 7,
   bg = "transparent"
 )
 
-# ###pathway enrichment for transcriptome
+# ###pathway enrichment for urine_metabolome
 # library(clusterProfiler)
 # 
 # protein_list <-

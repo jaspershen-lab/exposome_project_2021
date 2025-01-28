@@ -68,14 +68,12 @@ variable1 =
 variable1 =
   variable1[match(variable_name, variable1$labels), ]
 
-
 variable2 =
   codebook1 %>%
   dplyr::filter(period == "Postnatal")
 
 variable2 =
   variable2[match(variable_name, variable2$labels), ]
-
 
 ###mother data
 expression_data1 =
@@ -138,8 +136,12 @@ variable1 =
   codebook1 %>%
   dplyr::filter(period == "Pregnancy")
 
-variable1 =
-  variable1[match(variable_name, variable1$labels), ]
+if (nrow(variable1) > 0) {
+  variable1 =
+    variable1[match(variable_name, variable1$labels), ]
+} else{
+  variable1 <- NULL
+}
 
 variable2 =
   codebook1 %>%
@@ -149,11 +151,15 @@ variable2 =
   variable2[match(variable_name, variable2$labels), ]
 
 ###mother data
-expression_data1 =
-  exposome[, variable1$variable_name]
+if (is.null(variable1)) {
+  expression_data1 = NULL
+} else{
+  expression_data1 =
+    exposome[, variable1$variable_name]
+  rownames(expression_data1) = paste("mother", exposome$ID, sep = "_")
+  colnames(expression_data1) = variable1$labels
+}
 
-rownames(expression_data1) = paste("mother", exposome$ID, sep = "_")
-colnames(expression_data1) = variable1$labels
 
 ###child data
 expression_data2 =
@@ -177,7 +183,7 @@ variable_info =
   dplyr::mutate(description = stringr::str_replace_all(description, " in child", "")) %>%
   dplyr::mutate(description = stringr::str_replace_all(description, " in mother", ""))
 
-expression_data = expression_data[, sample_info$sample_id]
+expression_data = expression_data[, intersect(sample_info$sample_id, colnames(expression_data))]
 
 load("../../4_exposome_chemical_data_analysis/data_preparation/sample_info")
 
@@ -190,7 +196,6 @@ save(expression_data, file = "expression_data")
 save(sample_info, file = "sample_info")
 save(variable_info, file = "variable_info")
 save(codebook, file = "1_codebood")
-
 
 
 table(codebook$domain)
@@ -249,7 +254,6 @@ name1[is.na(variable1$variable_name)] =
 name2[is.na(variable2$variable_name)] =
   name1[is.na(variable2$variable_name)]
 
-
 col_name1 = variable1$labels
 col_name2 = variable2$labels
 
@@ -301,7 +305,6 @@ save(expression_data, file = "expression_data")
 save(sample_info, file = "sample_info")
 save(variable_info, file = "variable_info")
 save(codebook, file = "1_codebood")
-
 
 
 table(codebook$domain)
