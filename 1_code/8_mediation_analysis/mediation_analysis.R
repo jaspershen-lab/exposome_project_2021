@@ -277,17 +277,35 @@ internal_ome_variable_info %>%
 
 
 
-internal_ome_variable_info = 
-  rbind(
-    data.frame(transcriptome_variable_info,
-               class = "transcriptome"),
-    data.frame(proteome_variable_info,
-               class = "proteome"),
-    data.frame(serum_metabolome_variable_info,
-               class = "serum_metabolome"),
-    data.frame(urine_metabolome_variable_info,
-               class = "urine_metabolome")
-  )
+all_cols <- unique(c(
+  colnames(transcriptome_variable_info),
+  colnames(proteome_variable_info),
+  colnames(serum_metabolome_variable_info),
+  colnames(urine_metabolome_variable_info)
+))
+
+fill_cols <- function(df, cols) {
+  missing <- setdiff(cols, colnames(df))
+  df[missing] <- NA
+  df <- df[, cols]
+  return(df)
+}
+
+transcriptome_variable_info_filled <- fill_cols(transcriptome_variable_info, all_cols)
+proteome_variable_info_filled <- fill_cols(proteome_variable_info, all_cols)
+serum_metabolome_variable_info_filled <- fill_cols(serum_metabolome_variable_info, all_cols)
+urine_metabolome_variable_info_filled <- fill_cols(urine_metabolome_variable_info, all_cols)
+
+internal_ome_variable_info <- rbind(
+  transform(transcriptome_variable_info_filled, class = "transcriptome"),
+  transform(proteome_variable_info_filled, class = "proteome"),
+  transform(serum_metabolome_variable_info_filled, class = "serum_metabolome"),
+  transform(urine_metabolome_variable_info_filled, class = "urine_metabolome")
+)
+
+sum(rownames(internal_ome_expression_data) == internal_ome_variable_info$variable_id)
+
+any(rownames(internal_ome_expression_data) != internal_ome_variable_info$variable_id)
 
 rownames(exposome_expression_data) == exposome_variable_info$variable_id
 
