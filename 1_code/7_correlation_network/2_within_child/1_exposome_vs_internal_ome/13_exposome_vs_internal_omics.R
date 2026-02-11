@@ -311,7 +311,6 @@ plot <-
 
 plot
 
-
 save(total_graph, file = "total_graph")
 load("total_graph")
 

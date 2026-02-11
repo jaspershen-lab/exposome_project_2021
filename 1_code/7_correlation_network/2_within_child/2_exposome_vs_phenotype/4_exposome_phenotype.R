@@ -51,19 +51,19 @@ exposome_chemical_phenotype_glm =
   tibble::rownames_to_column(var = "variable_id") %>% 
   dplyr::mutate(class = "Exposome_chemical")
 
-# exposome_phenotype_glm =
-#   rbind(
-#     exposome_air_phenotype_glm,
-#     exposome_outdoor_phenotype_glm,
-#     exposome_chemical_phenotype_glm
-#   ) %>%
-#   tidyr::pivot_longer(
-#     cols = -c(variable_id, class),
-#     names_to = "phenotype",
-#     values_to = "p.adjust"
-#   )
-# 
-# save(exposome_phenotype_glm, file = "exposome_phenotype_glm")
+exposome_phenotype_glm =
+  rbind(
+    exposome_air_phenotype_glm,
+    exposome_outdoor_phenotype_glm,
+    exposome_chemical_phenotype_glm
+  ) %>%
+  tidyr::pivot_longer(
+    cols = -c(variable_id, class),
+    names_to = "phenotype",
+    values_to = "p.adjust"
+  )
+
+save(exposome_phenotype_glm, file = "exposome_phenotype_glm")
 
 load("exposome_phenotype_glm")
 

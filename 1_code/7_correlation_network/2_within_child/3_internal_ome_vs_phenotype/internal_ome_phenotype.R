@@ -158,7 +158,7 @@ plot =
     text_color = "white"
   )
 plot
-# ggsave(plot, filename = "venn.pdf", width = 7, height = 7)
+ggsave(plot, filename = "venn.pdf", width = 7, height = 7)
 
 
 
@@ -335,13 +335,13 @@ plot
 save(total_graph, file = "total_graph")
 load("total_graph")
 
-# ggsave(
-#   plot,
-#   filename = "internal_ome_phenotype_correlation_network.pdf",
-#   width = 8.5,
-#   height = 7,
-#   bg = "transparent"
-# )
+ggsave(
+  plot,
+  filename = "internal_ome_phenotype_correlation_network.pdf",
+  width = 8.5,
+  height = 7,
+  bg = "transparent"
+)
 
 
 

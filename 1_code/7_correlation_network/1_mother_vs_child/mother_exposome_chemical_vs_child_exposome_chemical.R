@@ -1,5 +1,5 @@
 # ##avoid source
-# no_function()
+# # no_function()
 # 
 # setwd(r4projects::get_project_wd())
 # library(tidyverse)
@@ -12,30 +12,30 @@
 # load("3_data_analysis/4_exposome_chemical_data_analysis/data_preparation/sample_info")
 # load("3_data_analysis/4_exposome_chemical_data_analysis/data_preparation/variable_info")
 # 
-# mother_variable_info <- 
-#   child_variable_info <- 
+# mother_variable_info <-
+#   child_variable_info <-
 #   variable_info
 # 
-# mother_sample_info = 
-#   sample_info %>% 
+# mother_sample_info =
+#   sample_info %>%
 #   dplyr::filter(stringr::str_detect(sample_id, pattern = "mother"))
 # 
-# child_sample_info = 
-#   sample_info %>% 
+# child_sample_info =
+#   sample_info %>%
 #   dplyr::filter(stringr::str_detect(sample_id, pattern = "child"))
 # 
-# mother_expression_data = 
+# mother_expression_data =
 #   expression_data[,mother_sample_info$sample_id]
 # 
-# child_expression_data = 
+# child_expression_data =
 #   expression_data[,child_sample_info$sample_id]
 # 
-# mother_expression_data %>% 
+# mother_expression_data %>%
 #   apply(1, function(x){
 #     sum(is.na(x))
 #   })
 # 
-# child_expression_data %>% 
+# child_expression_data %>%
 #   apply(1, function(x){
 #     sum(is.na(x))
 #   })
@@ -43,12 +43,12 @@
 # setwd("3_data_analysis/mother_vs_child/mother_exposome_chemical_vs_child_exposome_chemical")
 # 
 # #######correlation analysis
-# 
-# dim(exp_expression_data)
-# dim(pro_expression_data)
+# # 
+# # dim(exp_expression_data)
+# # dim(pro_expression_data)
 # 
 # ###correct fiber for metabolomics
-# pro_expression_data1 <- 
+# pro_expression_data1 <-
 #   purrr::map(as.data.frame(t(pro_expression_data)), .f = function(x){
 #     temp_data <-
 #       data.frame(fiber = c(0,
@@ -58,17 +58,17 @@
 #                            1),
 #                  x,
 #                  stringsAsFactors = FALSE)
-#     
+# 
 #     lm_result <- lm(formula = x ~ fiber, data = temp_data)
 #     lm_result$residuals
-#   }) %>% 
-#   do.call(rbind, .) %>% 
+#   }) %>%
+#   do.call(rbind, .) %>%
 #   as.data.frame()
 # 
 # temp_data <-
 #   pro_expression_data1
 # 
-# colnames(temp_data) <- 
+# colnames(temp_data) <-
 #   colnames(pro_expression_data1) <-
 #   colnames(pro_expression_data)
 # 
@@ -82,8 +82,8 @@
 #   transparency = 0
 # )
 # 
-# plot <- 
-#   temp_data %>% 
+# plot <-
+#   temp_data %>%
 #   ComplexHeatmap::Heatmap(cluster_columns = FALSE,
 #                           show_column_names = TRUE,
 #                           show_row_names = FALSE,
@@ -92,10 +92,10 @@
 #                           clustering_distance_columns = "euclidean",
 #                           clustering_distance_rows = "euclidean",
 #                           col = col_fun,
-#                           km = 2, border = TRUE, 
-#                           row_dend_reorder = TRUE, 
+#                           km = 2, border = TRUE,
+#                           row_dend_reorder = TRUE,
 #                           column_dend_reorder = TRUE,
-#                           column_names_rot = 45, 
+#                           column_names_rot = 45,
 #                           name = "Z-score")
 # 
 # plot <- ggplotify::as.ggplot(plot)
@@ -196,18 +196,18 @@
 # # save(cor_value, file = "cor_value")
 # load('cor_value')
 # 
-# cor_value1 <- 
-#   cor_value %>% 
+# cor_value1 <-
+#   cor_value %>%
 #   dplyr::filter(abs(cor) > 0.9 & fdr < 0.05)
 # 
 # dim(cor_value)
 # dim(cor_value1)
 # 
-# cor_value1 <- 
-#   cor_value1 %>% 
-#   dplyr::left_join(exp_variable_info[,c(1:2)], by = c("from" = "peak_ID")) %>% 
-#   dplyr::rename(exp_id = MetabID) %>% 
-#   dplyr::mutate(pro_id = to) %>% 
+# cor_value1 <-
+#   cor_value1 %>%
+#   dplyr::left_join(exp_variable_info[,c(1:2)], by = c("from" = "peak_ID")) %>%
+#   dplyr::rename(exp_id = MetabID) %>%
+#   dplyr::mutate(pro_id = to) %>%
 #   dplyr::filter(!is.na(pro_id))
 # 
 # setwd(r4projects::get_project_wd())
@@ -256,10 +256,10 @@
 # #       vjust = 2,
 # #       hjust = -1
 # #     )
-# #   
+# #
 # #   name <- paste(cor_value1$from[idx], "_",
 # #                 cor_value1$to[idx], ".pdf", sep = "")
-# #   
+# #
 # #   ggsave(
 # #     plot,
 # #     filename = file.path(path1, name),
@@ -267,10 +267,10 @@
 # #     height = 7,
 # #     bg = "transparent"
 # #   )
-# #   
+# #
 # # }
 # 
-# setwd(r4projects::get_project_wd())  
+# setwd(r4projects::get_project_wd())
 # setwd("3_data_analysis/exposomeChemical_proteome/")
 # 
 # cor_value1$from %>% unique()
@@ -284,47 +284,47 @@
 # library(tidygraph)
 # 
 # ###network for all the exposome and proteome
-# edge_data <-  
-#   cor_value1 %>% 
+# edge_data <-
+#   cor_value1 %>%
 #   # dplyr::filter(from %in% cluster1) %>%
-#   dplyr::rename(from = from, 
-#                 to = to, 
-#                 Correlation = cor) %>% 
+#   dplyr::rename(from = from,
+#                 to = to,
+#                 Correlation = cor) %>%
 #   dplyr::mutate(fdr = -log(fdr, 10))
 # 
-# node_data <- 
-#   cor_value1 %>% 
+# node_data <-
+#   cor_value1 %>%
 #   # dplyr::filter(from %in% cluster1) %>%
-#   dplyr::rename(from = from, to = to) %>% 
-#   dplyr::select(from, to) %>% 
-#   tidyr::pivot_longer(cols = c(from, to), 
-#                       names_to = "class", values_to = "node") %>% 
+#   dplyr::rename(from = from, to = to) %>%
+#   dplyr::select(from, to) %>%
+#   tidyr::pivot_longer(cols = c(from, to),
+#                       names_to = "class", values_to = "node") %>%
 #   dplyr::mutate(class1 = case_when(
 #     stringr::str_detect(class, "from") ~ "Exposome",
 #     TRUE ~ "Proteome"
-#   )) %>% 
-#   dplyr::select(node, class1) %>% 
+#   )) %>%
+#   dplyr::select(node, class1) %>%
 #   dplyr::rename(Class = class1) %>%
 #   dplyr::distinct(node, .keep_all = TRUE)
 # 
-# node_data <- 
-#   node_data %>% 
+# node_data <-
+#   node_data %>%
 #   dplyr::arrange(desc(Class))
 # 
-# node_data <- 
-#   node_data %>% 
-#   dplyr::left_join(exp_variable_info[,c("peak_ID", "MetabID")], 
-#                    by = c("node" = "peak_ID")) %>% 
+# node_data <-
+#   node_data %>%
+#   dplyr::left_join(exp_variable_info[,c("peak_ID", "MetabID")],
+#                    by = c("node" = "peak_ID")) %>%
 #   dplyr::mutate(compound.name = case_when(
 #     !is.na(MetabID) ~ MetabID,
 #     TRUE ~ node
-#   )) %>% 
+#   )) %>%
 #   dplyr::select(node, Class, compound.name)
 # 
-# temp_data <- 
-#   tidygraph::tbl_graph(nodes = node_data, 
+# temp_data <-
+#   tidygraph::tbl_graph(nodes = node_data,
 #                        edges = edge_data,
-#                        directed = TRUE) %>% 
+#                        directed = TRUE) %>%
 #   dplyr::mutate(Degree = centrality_degree(mode = 'all'))
 # 
 # pal <-
@@ -359,13 +359,13 @@
 #       colour = Class
 #     ),
 #     size = 3,
-#     alpha = 1, 
+#     alpha = 1,
 #     show.legend = FALSE
 #   ) +
-#   guides(edge_width = guide_legend(title = "-log10(FDR adjusted P value)", 
+#   guides(edge_width = guide_legend(title = "-log10(FDR adjusted P value)",
 #                                    override.aes = list(shape = NA)),
 #          edge_color = ggraph::guide_edge_colorbar(title = "Spearman correlation"),
-#          fill = guide_legend(title = "Class", 
+#          fill = guide_legend(title = "Class",
 #                              override.aes = list(size = 4, linetype = "blank")),
 #          size = guide_legend(title = "Degree", override.aes = list(linetype = 0))) +
 #   ggraph::scale_edge_color_gradientn(colours = pal) +
@@ -391,7 +391,7 @@
 # library(clusterProfiler)
 # 
 # protein_list <-
-#   unique(c(cor_value1$to, cor_value1$from)) %>% 
+#   unique(c(cor_value1$to, cor_value1$from)) %>%
 #   data.frame(symbol = ., stringsAsFactors = FALSE)
 # 
 # protein_list <-
@@ -425,8 +425,8 @@
 # #     qvalueCutoff = 0.05,
 # #     pAdjustMethod = "fdr"
 # #   )
-# # 
-# # 
+# #
+# #
 # # kegg_class <-
 # #   purrr::map(
 # #     .x = enrich_kegg@result$ID,
@@ -440,7 +440,7 @@
 # #     }
 # #   )  %>%
 # #   unlist()
-# # 
+# #
 # # enrich_kegg@result$kegg_class <- kegg_class
 # # save(enrich_kegg, file = "pathway_enrichment/enrich_kegg")
 # 
@@ -464,7 +464,7 @@
 # #     pAdjustMethod = "fdr",
 # #     qvalueCutoff = 0.05
 # #   )
-# # 
+# #
 # # save(enrich_go, file = "pathway_enrichment/enrich_go")
 # 
 # load("pathway_enrichment/enrich_go")
@@ -480,7 +480,7 @@
 # #     pAdjustMethod = "fdr",
 # #     qvalueCutoff = 0.05
 # #   )
-# # 
+# #
 # # save(enrich_reactome, file = "pathway_enrichment/enrich_reactome")
 # 
 # load("pathway_enrichment/enrich_reactome")
@@ -497,7 +497,7 @@
 # # addWorksheet(wb, sheetName = "GO", gridLines = FALSE)
 # # addWorksheet(wb, sheetName = "KEGG", gridLines = FALSE)
 # # addWorksheet(wb, sheetName = "Reactome", gridLines = FALSE)
-# # freezePane(wb, sheet = 1, firstRow = TRUE, firstCol = TRUE) 
+# # freezePane(wb, sheet = 1, firstRow = TRUE, firstCol = TRUE)
 # # writeDataTable(
 # #   wb,
 # #   sheet = 1,
@@ -506,8 +506,8 @@
 # #   rowNames = TRUE,
 # #   tableStyle = "TableStyleLight9"
 # # )
-# # 
-# # freezePane(wb, sheet = 2, firstRow = TRUE, firstCol = TRUE) 
+# #
+# # freezePane(wb, sheet = 2, firstRow = TRUE, firstCol = TRUE)
 # # writeDataTable(
 # #   wb,
 # #   sheet = 2,
@@ -516,8 +516,8 @@
 # #   rowNames = TRUE,
 # #   tableStyle = "TableStyleLight9"
 # # )
-# # 
-# # freezePane(wb, sheet = 3, firstRow = TRUE, firstCol = TRUE) 
+# #
+# # freezePane(wb, sheet = 3, firstRow = TRUE, firstCol = TRUE)
 # # writeDataTable(
 # #   wb,
 # #   sheet = 3,
@@ -526,11 +526,11 @@
 # #   rowNames = TRUE,
 # #   tableStyle = "TableStyleLight9"
 # # )
-# # 
-# # saveWorkbook(wb, "enriched_pathway.xlsx", overwrite = TRUE) 
+# #
+# # saveWorkbook(wb, "enriched_pathway.xlsx", overwrite = TRUE)
 # 
 # 
-# temp_data <- 
+# temp_data <-
 #   rbind(
 #     data.frame(id = head(enrich_go@result$Description[which(enrich_go@result$p.adjust < 0.05)], 10),
 #                count = head(enrich_go@result$Count[which(enrich_go@result$p.adjust < 0.05)], 10),
@@ -543,26 +543,26 @@
 #     data.frame(id = head(enrich_reactome@result$Description[which(enrich_reactome@result$p.adjust < 0.05)], 10),
 #                count = head(enrich_reactome@result$Count[which(enrich_reactome@result$p.adjust < 0.05)], 10),
 #                fdr = head(enrich_reactome@result$p.adjust[which(enrich_reactome@result$p.adjust < 0.05)], 10),
-#                class = "Rectome")    
+#                class = "Rectome")
 #   )
 # 
-# plot <- 
-#   temp_data %>% 
-#   dplyr::arrange(class, fdr) %>% 
-#   dplyr::mutate(id = factor(id, levels = id)) %>% 
+# plot <-
+#   temp_data %>%
+#   dplyr::arrange(class, fdr) %>%
+#   dplyr::mutate(id = factor(id, levels = id)) %>%
 #   ggplot(aes(id, -log(fdr, 10))) +
-#   geom_segment(aes(x = id, xend = id, y = 0, 
+#   geom_segment(aes(x = id, xend = id, y = 0,
 #                    yend = -log(fdr, 10),
 #                    color = class), show.legend = FALSE) +
 #   geom_point(aes(fill = class, size = count), shape = 21) +
 #   scale_y_continuous(expand = expansion(mult = c(0, 0.2))) +
-#   guides(fill = guide_legend(title = "", 
+#   guides(fill = guide_legend(title = "",
 #                              override.aes = list(size = 4))) +
 #   theme_bw() +
 #   labs(x = "", y = "-log10(FDR adjusted P value)") +
 #   ggsci::scale_color_d3() +
 #   ggsci::scale_fill_d3() +
-#   theme(axis.text.x = element_text(angle = 45, size = 10, hjust = 1, 
+#   theme(axis.text.x = element_text(angle = 45, size = 10, hjust = 1,
 #                                    vjust = 1),
 #         panel.grid.minor = element_blank(),
 #         axis.title = element_text(size = 10),
@@ -575,15 +575,15 @@
 # 
 # ##for each pathway, it is positive or negative correlation with exposome chemical
 # result_go <-
-#   enrich_go@result[enrich_go@result$p.adjust < 0.05, ] %>% 
+#   enrich_go@result[enrich_go@result$p.adjust < 0.05, ] %>%
 #   head(10)
 # 
 # result_kegg <-
-#   enrich_kegg@result[enrich_kegg@result$p.adjust < 0.05, ] %>% 
+#   enrich_kegg@result[enrich_kegg@result$p.adjust < 0.05, ] %>%
 #   head(10)
 # 
 # result_reactome <-
-#   enrich_reactome@result[enrich_reactome@result$p.adjust < 0.05, ] %>% 
+#   enrich_reactome@result[enrich_reactome@result$p.adjust < 0.05, ] %>%
 #   head(10)
 # 
 # result_go$Description
@@ -600,7 +600,7 @@
 #       dplyr::pull(SYMBOL) %>%
 #       unique() %>%
 #       data.frame(x = .) %>%
-#       dplyr::left_join(cor_value1[, c("from", "pro_id", "cor")], by = c("x" = "pro_id")) %>% 
+#       dplyr::left_join(cor_value1[, c("from", "pro_id", "cor")], by = c("x" = "pro_id")) %>%
 #       dplyr::arrange(cor)
 #     colnames(x) <- c("protein_id", "chemical_id", "correlation")
 #     x
@@ -625,7 +625,7 @@
 #                    by = c("chemical_id" = "node"))
 # 
 # 
-# gene_id_go <- 
+# gene_id_go <-
 #   data.frame(gene_id_go, pathway_class = "GO")
 # 
 # ###KEGG
@@ -640,7 +640,7 @@
 #       dplyr::pull(SYMBOL) %>%
 #       unique() %>%
 #       data.frame(x = .) %>%
-#       dplyr::left_join(cor_value1[, c("from", "pro_id", "cor")], by = c("x" = "pro_id")) %>% 
+#       dplyr::left_join(cor_value1[, c("from", "pro_id", "cor")], by = c("x" = "pro_id")) %>%
 #       dplyr::arrange(cor)
 #     colnames(x) <- c("protein_id", "chemical_id", "correlation")
 #     x
@@ -665,7 +665,7 @@
 #                    by = c("chemical_id" = "node"))
 # 
 # 
-# gene_id_kegg <- 
+# gene_id_kegg <-
 #   data.frame(gene_id_kegg, pathway_class = "KEGG")
 # 
 # ###Reactome
@@ -680,7 +680,7 @@
 #       dplyr::pull(SYMBOL) %>%
 #       unique() %>%
 #       data.frame(x = .) %>%
-#       dplyr::left_join(cor_value1[, c("from", "pro_id", "cor")], by = c("x" = "pro_id")) %>% 
+#       dplyr::left_join(cor_value1[, c("from", "pro_id", "cor")], by = c("x" = "pro_id")) %>%
 #       dplyr::arrange(cor)
 #     colnames(x) <- c("protein_id", "chemical_id", "correlation")
 #     x
@@ -704,7 +704,7 @@
 #                    c("node", "compound.name"),
 #                    by = c("chemical_id" = "node"))
 # 
-# gene_id_reactome <- 
+# gene_id_reactome <-
 #   data.frame(gene_id_reactome, pathway_class = "Reactome")
 # 
 # gene_id_data <-
@@ -733,7 +733,7 @@
 #       )
 #   )
 # 
-# temp_data1 <- 
+# temp_data1 <-
 #   gene_id_data2 %>%
 #   dplyr::select(pathway, compound.name, correlation) %>%
 #   dplyr::mutate(affect = case_when(correlation > 0 ~ "pos",
@@ -745,10 +745,10 @@
 #     table(compound.name),
 #     decreasing =
 #       FALSE
-#   )))) 
+#   ))))
 # 
-# plot1 <- 
-#   temp_data1 %>% 
+# plot1 <-
+#   temp_data1 %>%
 #   ggplot(aes(y = compound.name)) +
 #   geom_bar(aes(fill = affect), show.legend = FALSE,
 #            color = "black") +
@@ -766,7 +766,7 @@
 # 
 # # ggsave(plot1, filename = "plot1.pdf", width = 7, height = 7)
 # 
-# temp_data2 <- 
+# temp_data2 <-
 #   gene_id_data2 %>%
 #   dplyr::select(pathway, compound.name, correlation) %>%
 #   dplyr::mutate(affect = case_when(correlation > 0 ~ "pos",
@@ -778,10 +778,10 @@
 #     table(pathway),
 #     decreasing =
 #       FALSE
-#   )))) 
+#   ))))
 # 
-# plot2 <- 
-#   temp_data2 %>% 
+# plot2 <-
+#   temp_data2 %>%
 #   ggplot(aes(y = pathway)) +
 #   geom_bar(aes(fill = affect), show.legend = FALSE,
 #            color = "black") +
@@ -830,29 +830,29 @@
 #       dplyr::rename(node = pathway)
 #   )
 # 
-# node_data[node_data$class == "chemical",] <- 
+# node_data[node_data$class == "chemical",] <-
 #   node_data[node_data$class == "chemical",][match(levels(temp_data1$compound.name),
 #                                                   node_data[node_data$class == "chemical",]$node),]
 # 
-# node_data[node_data$class == "pathway",] <- 
+# node_data[node_data$class == "pathway",] <-
 #   node_data[node_data$class == "pathway",][match(levels(temp_data2$pathway),
 #                                                  node_data[node_data$class == "pathway",]$node),]
 # 
-# node_data <- 
-#   node_data %>% 
+# node_data <-
+#   node_data %>%
 #   dplyr::mutate(node = factor(node, levels = node))
 # 
-# temp_data <- 
-#   tidygraph::tbl_graph(nodes = node_data, 
+# temp_data <-
+#   tidygraph::tbl_graph(nodes = node_data,
 #                        edges = edge_data,
-#                        directed = TRUE) %>% 
+#                        directed = TRUE) %>%
 #   dplyr::mutate(Degree = centrality_degree(mode = 'all'))
 # 
 # pal <-
 #   wesanderson::wes_palette(name = "Zissou1", n = 100, type = "continuous")
 # 
 # 
-# my_layout <- create_layout(temp_data, 
+# my_layout <- create_layout(temp_data,
 #                            layout = 'linear')
 # 
 # my_layout$y[my_layout$class == "protein"] <- 5
@@ -872,7 +872,7 @@
 # #   dplyr::left_join(data.frame(node = levels(temp_data1$compound.name)),
 # #                    my_layout1[my_layout1$class == "chemical", ], by = "node") %>%
 # #   dplyr::select(x, y, node, everything())
-# # 
+# #
 # # my_layout1[my_layout1$class == "pathway", ] <-
 # #   dplyr::left_join(data.frame(node = levels(temp_data2$pathway)),
 # #                    my_layout1[my_layout1$class == "pathway",], by = "node") %>%
@@ -927,11 +927,11 @@
 #       colour = class
 #     ),
 #     size = 3,
-#     alpha = 1, 
+#     alpha = 1,
 #     show.legend = FALSE
 #   ) +
 #   guides(edge_color = ggraph::guide_edge_colorbar(title = "Spearman correlation"),
-#          fill = guide_legend(title = "Class", 
+#          fill = guide_legend(title = "Class",
 #                              override.aes = list(size = 4, linetype = "blank")),
 #          size = guide_legend(title = "Degree", override.aes = list(linetype = 0))) +
 #   ggraph::scale_edge_color_gradientn(colours = pal) +
@@ -950,15 +950,15 @@
 # 
 # 
 # 
-# plot <- 
-#   gene_id_data %>% 
-#   dplyr::select(compound.name, pathway) %>% 
-#   dplyr::distinct() %>% 
-#   dplyr::group_by(compound.name) %>% 
-#   dplyr::summarise(n = n()) %>% 
-#   dplyr::ungroup() %>% 
-#   dplyr::arrange(n) %>% 
-#   dplyr::mutate(compound.name = factor(compound.name, levels = compound.name)) %>% 
+# plot <-
+#   gene_id_data %>%
+#   dplyr::select(compound.name, pathway) %>%
+#   dplyr::distinct() %>%
+#   dplyr::group_by(compound.name) %>%
+#   dplyr::summarise(n = n()) %>%
+#   dplyr::ungroup() %>%
+#   dplyr::arrange(n) %>%
+#   dplyr::mutate(compound.name = factor(compound.name, levels = compound.name)) %>%
 #   ggplot(aes(y = compound.name, x = n)) +
 #   labs(x = "Pathway number", y = "") +
 #   geom_bar(stat = "identity", fill = "black") +
@@ -973,15 +973,15 @@
 # 
 # # ggsave(plot, filename = "chemical_pathway_number.pdf", width = 7, height = 7)
 # 
-# plot <- 
-#   gene_id_data %>% 
-#   dplyr::select(compound.name, pathway) %>% 
-#   dplyr::distinct() %>% 
-#   dplyr::group_by(pathway) %>% 
-#   dplyr::summarise(n = n()) %>% 
-#   dplyr::ungroup() %>% 
-#   dplyr::arrange(n) %>% 
-#   dplyr::mutate(pathway = factor(pathway, levels = pathway)) %>% 
+# plot <-
+#   gene_id_data %>%
+#   dplyr::select(compound.name, pathway) %>%
+#   dplyr::distinct() %>%
+#   dplyr::group_by(pathway) %>%
+#   dplyr::summarise(n = n()) %>%
+#   dplyr::ungroup() %>%
+#   dplyr::arrange(n) %>%
+#   dplyr::mutate(pathway = factor(pathway, levels = pathway)) %>%
 #   ggplot(aes(y = pathway, x = n)) +
 #   labs(x = "Chemical number", y = "") +
 #   geom_bar(stat = "identity", fill = "black") +
@@ -1022,7 +1022,7 @@
 #         pathway_class == "Reactome" &
 #         pathway %in% i
 #     )
-#   
+# 
 #   temp_edge_data <-
 #     rbind(
 #       temp_gene_id_data[, c("compound.name", "protein_id", "correlation")] %>%
@@ -1037,7 +1037,7 @@
 #                       cor = correlation) %>%
 #         dplyr::mutate(cor = NA)
 #     )
-#   
+# 
 #   temp_node_data <-
 #     rbind(
 #       temp_gene_id_data[, "compound.name", drop = FALSE] %>%
@@ -1053,17 +1053,17 @@
 #         dplyr::mutate(class = "pathway") %>%
 #         dplyr::rename(node = pathway)
 #     )
-#   
+# 
 #   temp_node_data <-
 #     temp_node_data %>%
 #     dplyr::mutate(node = factor(node, levels = node))
-#   
+# 
 #   temp_data <-
 #     tidygraph::tbl_graph(nodes = temp_node_data,
 #                          edges = temp_edge_data,
 #                          directed = TRUE) %>%
 #     dplyr::mutate(Degree = centrality_degree(mode = 'all'))
-#   
+# 
 #   plot =
 #     ggraph(temp_data) +
 #     geom_edge_link(aes(color = cor),

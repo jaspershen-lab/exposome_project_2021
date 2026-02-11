@@ -89,21 +89,21 @@ exposome_phenotype_glm$variable_id[which(exposome_phenotype_glm$Body.mass.index.
 exposome_phenotype_glm$variable_id[which(exposome_phenotype_glm$Intelligence.quotient_glm_p.adjust < 0.05)]
 
 
+###pie to show the how many exposome variables are associated with outcome
+data.frame(class = c("significant", "no"),
+           number = c(
+             sum(exposome_phenotype_glm$behavior_glm_p.adjust < 0.05),
+             nrow(exposome_variable_info) - sum(exposome_phenotype_glm$behavior_glm_p.adjust < 0.05)
+           )) %>%
+  ggplot(aes(x = 2, y = number, fill = class)) +
+  geom_bar(stat = "identity") +
+  coord_polar("y", start = 200)
+  theme_void() +
+  scale_fill_manual(values = c(
+    significant
+  )) +
+  xlim(.2, 2.5)
 
-# ###pie to show the how many exposome variables are associated with outcome
-# data.frame(class = c("significant", "no"),
-#            number = c(
-#              sum(exposome_phenotype_glm$behavior_glm_p.adjust < 0.05),
-#              nrow(exposome_variable_info) - sum(exposome_phenotype_glm$behavior_glm_p.adjust < 0.05)
-#            )) %>%
-#   ggplot(aes(x = 2, y = number, fill = class)) +
-#   geom_bar(stat = "identity") +
-#   coord_polar("y", start = 200)
-#   theme_void() +
-#   scale_fill_manual(values = c(
-#     significant
-#   )) +
-#   xlim(.2, 2.5)
 
 
 

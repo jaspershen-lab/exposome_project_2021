@@ -200,166 +200,166 @@ setwd("3_data_analysis/correlation_network/within_child/mediation_analysis")
 
 library(mediation)
 
-# mediation_result = NULL
-# 
-# for(i in 4091:nrow(exposome_internal_omics_cor)) {
-#   cat(i, "\n")
-#   exposome_variable_id = exposome_internal_omics_cor$from[i]
-#   internal_ome_variable_id = exposome_internal_omics_cor$to[i]
-# 
-#   temp_data =   
-#   data.frame(exposome_value = as.numeric(exposome_expression_data[exposome_variable_id,]),
-#              internal_ome_value = as.numeric(internal_ome_expression_data[internal_ome_variable_id,]),
-#              exposome_sample_info
-#              )
-#   
-#   glm_reg1 =
-#     glm(
-#       internal_ome_value ~ exposome_value + Child.sex + Year.of.birth + Maternal.BMI + Gestational.age.at.birth +
-#         Maternal.age + Child.height + Child.weight + Birthweight,
-#       family = gaussian,
-#       temp_data
-#     )
-#   
-#   temp_exposome_phenotype_glm = 
-#     exposome_phenotype_glm %>% 
-#     dplyr::filter(variable_id %in% exposome_variable_id)
-#   
-#   if(nrow(temp_exposome_phenotype_glm) == 0){
-#     next()
-#   }
-#   
-#   for (j in 1:nrow(temp_exposome_phenotype_glm)) {
-#     cat(j, " ")
-#     phenotype_id = temp_exposome_phenotype_glm$phenotype[j]
-#   
-#     temp_data2 = 
-#       data.frame(phenotype_value = temp_data[,phenotype_id],
-#                  temp_data)
-#     
-#     glm_reg2 =
-#       glm(
-#         phenotype_value ~ exposome_value + internal_ome_value + Child.sex + Year.of.birth + 
-#           Maternal.BMI + Gestational.age.at.birth +
-#           Maternal.age + Child.height + Child.weight + Birthweight,
-#         family = gaussian,
-#         temp_data2
-#       )
-#     
-#     result = mediate(
-#       glm_reg1 ,
-#       glm_reg2,
-#       treat = "exposome_value",
-#       mediator = "internal_ome_value",
-#       boot = F,
-#       sims = 1000
-#     )
-#   
-#   return_result = list(exposome_variable_id = exposome_variable_id,
-#                        internal_ome_variable_id = internal_ome_variable_id,
-#                        phenotype_id, 
-#                        result = result)              
-#   mediation_result = c(mediation_result, return_result)
-#   }
-# }
-# 
-# save(mediation_result, file = "mediation_result")
-# load("mediation_result")
-# length(mediation_result)
-# 
-# mediate =
-#   purrr::map(4 * (1:(length(mediation_result) / 4)), function(idx) {
-#     phenotype = mediation_result[[idx - 1]]
-#     mediator = mediation_result[[idx - 2]]
-#     treat = mediation_result[[idx - 3]]
-#     if(phenotype == "Behavior" & mediator == "PAI1" & treat == "NDVI_home"){
-#       cat(idx)
-#     }
-#     
-#     results = summary(mediation_result[[idx]])
-#     acme = results$d1
-#     acme_ci_lower = results$d1.ci[1]
-#     acme_ci_upper = results$d1.ci[2]
-#     acme_p = results$d1.p
-#     c(phenotype = phenotype, 
-#       mediator = mediator, 
-#       treat = treat, 
-#       acme = acme, 
-#       acme_ci_lower = acme_ci_lower, 
-#       acme_ci_upper = acme_ci_upper, 
-#       acme_p = acme_p)
-#   }) %>% 
-#   do.call(rbind, .) %>% 
-#   as.data.frame()
-# 
-# mediate$acme = as.numeric(mediate$acme)
-# mediate$`acme_ci_lower.2.5%` = as.numeric(mediate$`acme_ci_lower.2.5%`)
-# mediate$`acme_ci_upper.97.5%` = as.numeric(mediate$`acme_ci_upper.97.5%`)
-# mediate$acme_p = as.numeric(mediate$acme_p)
-# 
-# mediate = 
-# mediate %>% 
-#   dplyr::filter(acme_p < 0.05 & acme > 0 & acme < 1 & 
-#                   `acme_ci_upper.97.5%` < 1 & `acme_ci_lower.2.5%` > 0)
-# 
-# save(mediate, file = "mediate")
-# 
-# load("mediate")
-# 
-# ###get the correlation between treat with mediator, mediator and phenotype and treat with phenoty
-# cor_value = 
-# t(mediate) %>% 
-#   as.data.frame() %>% 
-# purrr::map(function(x){
-#  ##treat vs mediator
-#    cor_treat_mediator_test = 
-#   cor.test(x = as.numeric(exposome_expression_data[x[3],]),
-#            y = as.numeric(internal_ome_expression_data[x[2],]), 
-#            method = "spearman")
-#   cor_treat_mediator = cor_treat_mediator_test$estimate
-#   cor_treat_mediator_p = cor_treat_mediator_test$p.value
-#   
-#   ##mediator vs phenotype
-#   cor_mediator_phenotype_test = 
-#     cor.test(x = as.numeric(exposome_sample_info[,x[1]]),
-#              y = as.numeric(internal_ome_expression_data[x[2],]), 
-#              method = "spearman")
-#   cor_mediator_phenotype = cor_mediator_phenotype_test$estimate
-#   cor_mediator_phenotype_p = cor_mediator_phenotype_test$p.value
-#   
-#   ##treat vs phenotype
-#   cor_treat_phenotype_test = 
-#     cor.test(x = as.numeric(exposome_sample_info[,x[1]]),
-#              y = as.numeric(exposome_expression_data[x[3],]), 
-#              method = "spearman")
-#   cor_treat_phenotype = cor_treat_phenotype_test$estimate
-#   cor_treat_phenotype_p = cor_treat_phenotype_test$p.value
-#   
-#   c(cor_treat_mediator = cor_treat_mediator,
-#     cor_treat_mediator_p = cor_treat_mediator_p,
-#     cor_mediator_phenotype = cor_mediator_phenotype,
-#     cor_mediator_phenotype_p = cor_mediator_phenotype_p,
-#     cor_treat_phenotype = cor_treat_phenotype,
-#     cor_treat_phenotype_p = cor_treat_phenotype_p
-#     )
-# }) %>% 
-#   do.call(rbind, .) %>% 
-#   as.data.frame()
-# 
-# mediate_result =
-#   data.frame(mediate, cor_value)
-# 
-# ##only remain the relations with significant cor
-# mediate_result = 
-# mediate_result %>% 
-#   dplyr::filter(cor_treat_mediator_p < 0.05 & 
-#                   cor_mediator_phenotype_p < 0.05 &
-#                   cor_treat_phenotype_p < 0.05) %>% 
-#   dplyr::filter(((cor_treat_mediator.rho * cor_mediator_phenotype.rho) > 0 & cor_treat_phenotype.rho > 0) |
-#                   ((cor_treat_mediator.rho * cor_mediator_phenotype.rho) < 0 & cor_treat_phenotype.rho < 0)) %>% 
-#   dplyr::arrange(desc(acme))
-# 
-# save(mediate_result, file = "mediate_result")
+mediation_result = NULL
+
+for(i in 4091:nrow(exposome_internal_omics_cor)) {
+  cat(i, "\n")
+  exposome_variable_id = exposome_internal_omics_cor$from[i]
+  internal_ome_variable_id = exposome_internal_omics_cor$to[i]
+
+  temp_data =
+  data.frame(exposome_value = as.numeric(exposome_expression_data[exposome_variable_id,]),
+             internal_ome_value = as.numeric(internal_ome_expression_data[internal_ome_variable_id,]),
+             exposome_sample_info
+             )
+
+  glm_reg1 =
+    glm(
+      internal_ome_value ~ exposome_value + Child.sex + Year.of.birth + Maternal.BMI + Gestational.age.at.birth +
+        Maternal.age + Child.height + Child.weight + Birthweight,
+      family = gaussian,
+      temp_data
+    )
+
+  temp_exposome_phenotype_glm =
+    exposome_phenotype_glm %>%
+    dplyr::filter(variable_id %in% exposome_variable_id)
+
+  if(nrow(temp_exposome_phenotype_glm) == 0){
+    next()
+  }
+
+  for (j in 1:nrow(temp_exposome_phenotype_glm)) {
+    cat(j, " ")
+    phenotype_id = temp_exposome_phenotype_glm$phenotype[j]
+
+    temp_data2 =
+      data.frame(phenotype_value = temp_data[,phenotype_id],
+                 temp_data)
+
+    glm_reg2 =
+      glm(
+        phenotype_value ~ exposome_value + internal_ome_value + Child.sex + Year.of.birth +
+          Maternal.BMI + Gestational.age.at.birth +
+          Maternal.age + Child.height + Child.weight + Birthweight,
+        family = gaussian,
+        temp_data2
+      )
+
+    result = mediate(
+      glm_reg1 ,
+      glm_reg2,
+      treat = "exposome_value",
+      mediator = "internal_ome_value",
+      boot = F,
+      sims = 1000
+    )
+
+  return_result = list(exposome_variable_id = exposome_variable_id,
+                       internal_ome_variable_id = internal_ome_variable_id,
+                       phenotype_id,
+                       result = result)
+  mediation_result = c(mediation_result, return_result)
+  }
+}
+
+save(mediation_result, file = "mediation_result")
+load("mediation_result")
+length(mediation_result)
+
+mediate =
+  purrr::map(4 * (1:(length(mediation_result) / 4)), function(idx) {
+    phenotype = mediation_result[[idx - 1]]
+    mediator = mediation_result[[idx - 2]]
+    treat = mediation_result[[idx - 3]]
+    if(phenotype == "Behavior" & mediator == "PAI1" & treat == "NDVI_home"){
+      cat(idx)
+    }
+
+    results = summary(mediation_result[[idx]])
+    acme = results$d1
+    acme_ci_lower = results$d1.ci[1]
+    acme_ci_upper = results$d1.ci[2]
+    acme_p = results$d1.p
+    c(phenotype = phenotype,
+      mediator = mediator,
+      treat = treat,
+      acme = acme,
+      acme_ci_lower = acme_ci_lower,
+      acme_ci_upper = acme_ci_upper,
+      acme_p = acme_p)
+  }) %>%
+  do.call(rbind, .) %>%
+  as.data.frame()
+
+mediate$acme = as.numeric(mediate$acme)
+mediate$`acme_ci_lower.2.5%` = as.numeric(mediate$`acme_ci_lower.2.5%`)
+mediate$`acme_ci_upper.97.5%` = as.numeric(mediate$`acme_ci_upper.97.5%`)
+mediate$acme_p = as.numeric(mediate$acme_p)
+
+mediate =
+mediate %>%
+  dplyr::filter(acme_p < 0.05 & acme > 0 & acme < 1 &
+                  `acme_ci_upper.97.5%` < 1 & `acme_ci_lower.2.5%` > 0)
+
+save(mediate, file = "mediate")
+
+load("mediate")
+
+###get the correlation between treat with mediator, mediator and phenotype and treat with phenoty
+cor_value =
+t(mediate) %>%
+  as.data.frame() %>%
+purrr::map(function(x){
+ ##treat vs mediator
+   cor_treat_mediator_test =
+  cor.test(x = as.numeric(exposome_expression_data[x[3],]),
+           y = as.numeric(internal_ome_expression_data[x[2],]),
+           method = "spearman")
+  cor_treat_mediator = cor_treat_mediator_test$estimate
+  cor_treat_mediator_p = cor_treat_mediator_test$p.value
+
+  ##mediator vs phenotype
+  cor_mediator_phenotype_test =
+    cor.test(x = as.numeric(exposome_sample_info[,x[1]]),
+             y = as.numeric(internal_ome_expression_data[x[2],]),
+             method = "spearman")
+  cor_mediator_phenotype = cor_mediator_phenotype_test$estimate
+  cor_mediator_phenotype_p = cor_mediator_phenotype_test$p.value
+
+  ##treat vs phenotype
+  cor_treat_phenotype_test =
+    cor.test(x = as.numeric(exposome_sample_info[,x[1]]),
+             y = as.numeric(exposome_expression_data[x[3],]),
+             method = "spearman")
+  cor_treat_phenotype = cor_treat_phenotype_test$estimate
+  cor_treat_phenotype_p = cor_treat_phenotype_test$p.value
+
+  c(cor_treat_mediator = cor_treat_mediator,
+    cor_treat_mediator_p = cor_treat_mediator_p,
+    cor_mediator_phenotype = cor_mediator_phenotype,
+    cor_mediator_phenotype_p = cor_mediator_phenotype_p,
+    cor_treat_phenotype = cor_treat_phenotype,
+    cor_treat_phenotype_p = cor_treat_phenotype_p
+    )
+}) %>%
+  do.call(rbind, .) %>%
+  as.data.frame()
+
+mediate_result =
+  data.frame(mediate, cor_value)
+
+##only remain the relations with significant cor
+mediate_result =
+mediate_result %>%
+  dplyr::filter(cor_treat_mediator_p < 0.05 &
+                  cor_mediator_phenotype_p < 0.05 &
+                  cor_treat_phenotype_p < 0.05) %>%
+  dplyr::filter(((cor_treat_mediator.rho * cor_mediator_phenotype.rho) > 0 & cor_treat_phenotype.rho > 0) |
+                  ((cor_treat_mediator.rho * cor_mediator_phenotype.rho) < 0 & cor_treat_phenotype.rho < 0)) %>%
+  dplyr::arrange(desc(acme))
+
+save(mediate_result, file = "mediate_result")
 
 load("mediate_result")
 length(unique(mediate_result$phenotype))
@@ -738,7 +738,7 @@ plot <-
 
 plot
 
-# ggsave(plot, filename = "IQ_mediation_analysis.pdf", width = 7, height = 7)
+ggsave(plot, filename = "IQ_mediation_analysis.pdf", width = 7, height = 7)
 
 
 
@@ -917,7 +917,7 @@ plot <-
 
 plot
 
-# ggsave(plot, filename = "Behavior_mediation_analysis.pdf", width = 7, height = 7)
+ggsave(plot, filename = "Behavior_mediation_analysis.pdf", width = 7, height = 7)
 # 
 # 
 
@@ -1087,7 +1087,7 @@ plot <-
 
 plot
 
-# ggsave(plot, filename = "BMI_mediation_analysis.pdf", width = 7, height = 7)
+ggsave(plot, filename = "BMI_mediation_analysis.pdf", width = 7, height = 7)
 
 
 

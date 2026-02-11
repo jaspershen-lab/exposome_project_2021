@@ -9,7 +9,7 @@
 # load("3_data_analysis/4_exposome_chemical_data_analysis/data_preparation/variable_info")
 # 
 # exposome_chemical_expression_data = expression_data
-# exposome_chemical_sample_info = sample_info %>% 
+# exposome_chemical_sample_info = sample_info %>%
 #   dplyr::mutate(sample_id = as.character(sample_id))
 # exposome_chemical_variable_info = variable_info
 # 
@@ -19,7 +19,7 @@
 # load("3_data_analysis/5_exposome_air_data_analysis/data_preparation/variable_info")
 # 
 # exposome_air_expression_data = expression_data
-# exposome_air_sample_info = sample_info %>% 
+# exposome_air_sample_info = sample_info %>%
 #   dplyr::mutate(sample_id = as.character(sample_id))
 # exposome_air_variable_info = variable_info
 # 
@@ -29,7 +29,7 @@
 # load("3_data_analysis/6_exposome_outdoor_data_analysis/data_preparation/variable_info")
 # 
 # exposome_outdoor_expression_data = expression_data
-# exposome_outdoor_sample_info = sample_info %>% 
+# exposome_outdoor_sample_info = sample_info %>%
 #   dplyr::mutate(sample_id = as.character(sample_id))
 # exposome_outdoor_variable_info = variable_info
 # 
@@ -39,7 +39,7 @@
 # load("3_data_analysis/7_lifecycle_outdoor_data_analysis/data_preparation/variable_info")
 # 
 # exposome_lifecycle_expression_data = expression_data
-# exposome_lifecycle_sample_info = sample_info %>% 
+# exposome_lifecycle_sample_info = sample_info %>%
 #   dplyr::mutate(sample_id = as.character(sample_id))
 # exposome_lifecycle_variable_info = variable_info
 # 
@@ -88,8 +88,8 @@
 # setdiff(exposome_sample_info$subject_id, proteome_sample_info$sample_id)
 # setdiff(proteome_sample_info$sample_id, exposome_sample_info$subject_id)
 # 
-# temp = 
-#   proteome_sample_info %>% 
+# temp =
+#   proteome_sample_info %>%
 #   dplyr::left_join(exposome_sample_info, by = "sample_id")
 # 
 # 
