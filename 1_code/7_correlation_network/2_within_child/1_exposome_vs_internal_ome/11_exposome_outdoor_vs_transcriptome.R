@@ -1,5 +1,5 @@
 ##avoid source
-no_function()
+# no_function()
 
 setwd(r4projects::get_project_wd())
 library(tidyverse)
@@ -109,42 +109,42 @@ rownames(transcriptome_expression_data2) = rownames(transcriptome_expression_dat
 dim(exposome_outdoor_expression_data)
 dim(transcriptome_expression_data2)
 
-# ###calculate correlation between exposome and transcriptome
-# cor_value <-
-#   cor(x = t(as.matrix(exposome_outdoor_expression_data)),
-#       y = t(as.matrix(transcriptome_expression_data2)),
-#       method = "spearman")
-# 
-# cor_value <-
-#   cor_value %>%
-#   as.data.frame() %>%
-#   tibble::rownames_to_column(var = "from") %>%
-#   tidyr::pivot_longer(-from, names_to = "to", values_to = "cor")
-# 
-# library(plyr)
-# 
-# p_value <-
-#   purrr::map(as.data.frame(t(cor_value)), .f = function(x){
-#     value1 <- as.numeric(exposome_outdoor_expression_data[x[1],])
-#     value2 <- as.numeric(transcriptome_expression_data2[x[2],])
-#     cor.test(value1, value2, method = "spearman")$p.value
-#   }) %>%
-#   unlist()
-# 
-# cor_value <-
-#   data.frame(cor_value, p_value, stringsAsFactors = FALSE)
-# 
-# plot(density(cor_value$p_value))
-# 
-# cor_value$p.adjust = p.adjust(cor_value$p_value, method = "BH")
-# 
-# cor_value =
-# cor_value %>%
-#   dplyr::filter(p.adjust < 0.05)
-# 
-# dim(cor_value)
-# 
-# save(cor_value, file = "cor_value")
+###calculate correlation between exposome and transcriptome
+cor_value <-
+  cor(x = t(as.matrix(exposome_outdoor_expression_data)),
+      y = t(as.matrix(transcriptome_expression_data2)),
+      method = "spearman")
+
+cor_value <-
+  cor_value %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column(var = "from") %>%
+  tidyr::pivot_longer(-from, names_to = "to", values_to = "cor")
+
+library(plyr)
+
+p_value <-
+  purrr::map(as.data.frame(t(cor_value)), .f = function(x){
+    value1 <- as.numeric(exposome_outdoor_expression_data[x[1],])
+    value2 <- as.numeric(transcriptome_expression_data2[x[2],])
+    cor.test(value1, value2, method = "spearman")$p.value
+  }) %>%
+  unlist()
+
+cor_value <-
+  data.frame(cor_value, p_value, stringsAsFactors = FALSE)
+
+plot(density(cor_value$p_value))
+
+cor_value$p.adjust = p.adjust(cor_value$p_value, method = "BH")
+
+cor_value =
+cor_value %>%
+  dplyr::filter(p.adjust < 0.05)
+
+dim(cor_value)
+
+save(cor_value, file = "cor_value")
 load('cor_value')
 
 cor_value$from %>% unique()

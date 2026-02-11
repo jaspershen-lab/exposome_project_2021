@@ -1,5 +1,5 @@
 ##avoid source
-no_function()
+# no_function()
 
 setwd(r4projects::get_project_wd())
 library(tidyverse)
@@ -184,6 +184,8 @@ temp_data <-
                        edges = edge_data,
                        directed = TRUE) %>% 
   dplyr::mutate(Degree = centrality_degree(mode = 'all'))
+
+save(temp_data, file = "temp_data.rda")
 
 pal <-
   wesanderson::wes_palette(name = "Zissou1",

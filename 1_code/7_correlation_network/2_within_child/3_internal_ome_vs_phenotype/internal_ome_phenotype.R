@@ -1,5 +1,5 @@
 ##avoid source
-no_function()
+# no_function()
 
 setwd(r4projects::get_project_wd())
 library(tidyverse)
@@ -210,26 +210,11 @@ node_data <-
   #     "Serum_metabolome"
   #   )
   # )) %>%
-dplyr::left_join(transcriptome_variable_info[,c("variable_id", "description")],
+dplyr::left_join(transcriptome_variable_info[,c("variable_id", "GeneSymbolDB2")],
                  by = c("node" = "variable_id")) %>% 
-  dplyr::mutate(true_name = case_when(!is.na(description) ~ description,
+  dplyr::mutate(true_name = case_when(!is.na(GeneSymbolDB2) ~ GeneSymbolDB2,
                                       TRUE ~ node)) %>%
-  dplyr::select(-description) %>% 
-  dplyr::left_join(proteome_variable_info[, c("variable_id", "labels")],
-                   by = c("node" = "variable_id")) %>%
-  dplyr::mutate(true_name = case_when(!is.na(labels) ~ labels,
-                                      TRUE ~ true_name)) %>% 
-  dplyr::select(-labels) %>% 
-  dplyr::left_join(serum_metabolome_variable_info[, c("variable_id", "labels")],
-                   by = c("node" = "variable_id")) %>%
-  dplyr::mutate(true_name = case_when(!is.na(labels) ~ labels,
-                                      TRUE ~ true_name)) %>% 
-  dplyr::select(-labels) %>% 
-  dplyr::left_join(transcriptome_variable_info[, c("variable_id", "GeneSymbol_Affy")],
-                   by = c("node" = "variable_id")) %>%
-  dplyr::mutate(true_name = case_when(!is.na(GeneSymbol_Affy) ~ GeneSymbol_Affy,
-                                      TRUE ~ true_name)) %>% 
-  dplyr::select(-GeneSymbol_Affy) %>% 
+  dplyr::select(-GeneSymbolDB2) %>% 
   dplyr::left_join(proteome_variable_info[, c("variable_id", "Gene_Symbol")],
                    by = c("node" = "variable_id")) %>%
   dplyr::mutate(true_name = case_when(!is.na(Gene_Symbol) ~ Gene_Symbol,
@@ -250,18 +235,18 @@ dplyr::left_join(transcriptome_variable_info[,c("variable_id", "description")],
 
 ####output node data and edge data
 library(openxlsx)
-# wb = createWorkbook()
-# modifyBaseFont(wb, fontSize = 12, fontName = "Arial Narrow")
-# addWorksheet(wb, sheetName = "Node information", gridLines = TRUE)
-# addWorksheet(wb, sheetName = "Edge information", gridLines = TRUE)
-# freezePane(wb, sheet = 1, firstRow = TRUE, firstCol = TRUE)
-# freezePane(wb, sheet = 2, firstRow = TRUE, firstCol = TRUE)
-# writeDataTable(wb, sheet = 1, x = node_data,
-#                colNames = TRUE, rowNames = FALSE)
-# writeDataTable(wb, sheet = 2, x = edge_data %>% dplyr::select(from, to, everything()),
-#                colNames = TRUE, rowNames = FALSE)
-# 
-# saveWorkbook(wb, "internal_ome_internal_ome_network.xlsx", overwrite = TRUE)
+wb = createWorkbook()
+modifyBaseFont(wb, fontSize = 12, fontName = "Arial Narrow")
+addWorksheet(wb, sheetName = "Node information", gridLines = TRUE)
+addWorksheet(wb, sheetName = "Edge information", gridLines = TRUE)
+freezePane(wb, sheet = 1, firstRow = TRUE, firstCol = TRUE)
+freezePane(wb, sheet = 2, firstRow = TRUE, firstCol = TRUE)
+writeDataTable(wb, sheet = 1, x = node_data,
+               colNames = TRUE, rowNames = FALSE)
+writeDataTable(wb, sheet = 2, x = edge_data %>% dplyr::select(from, to, everything()),
+               colNames = TRUE, rowNames = FALSE)
+
+saveWorkbook(wb, "internal_ome_internal_ome_network.xlsx", overwrite = TRUE)
 
 total_graph <-
   tidygraph::tbl_graph(nodes = node_data,

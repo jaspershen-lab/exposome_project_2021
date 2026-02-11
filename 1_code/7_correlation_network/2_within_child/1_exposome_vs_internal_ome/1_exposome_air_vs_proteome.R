@@ -1,5 +1,5 @@
 ##avoid source
-no_function()
+# no_function()
 
 setwd(r4projects::get_project_wd())
 library(tidyverse)
@@ -189,6 +189,8 @@ pal <-
   wesanderson::wes_palette(name = "Zissou1",
                            n = 100,
                            type = "continuous")
+
+save(temp_data, file = "temp_data.rda")
 
 plot1 <-
   ggraph(temp_data,

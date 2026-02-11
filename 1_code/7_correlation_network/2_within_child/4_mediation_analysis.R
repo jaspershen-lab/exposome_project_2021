@@ -1,5 +1,5 @@
 ##avoid source
-no_function()
+# no_function()
 
 setwd(r4projects::get_project_wd())
 library(tidyverse)
@@ -202,7 +202,7 @@ library(mediation)
 
 mediation_result = NULL
 
-for(i in 4091:nrow(exposome_internal_omics_cor)) {
+for(i in 1:nrow(exposome_internal_omics_cor)) {
   cat(i, "\n")
   exposome_variable_id = exposome_internal_omics_cor$from[i]
   internal_ome_variable_id = exposome_internal_omics_cor$to[i]

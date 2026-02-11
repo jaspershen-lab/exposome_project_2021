@@ -1,5 +1,5 @@
 ##avoid source
-no_function()
+# no_function()
 
 setwd(r4projects::get_project_wd())
 library(tidyverse)
@@ -123,7 +123,7 @@ dir.create(
 )
 setwd("3_data_analysis/correlation_network/within_child/exposome_vs_internal_omics")
 
-# save(exposome_internal_omics_cor, file = "exposome_internal_omics_cor")
+save(exposome_internal_omics_cor, file = "exposome_internal_omics_cor")
 
 library(igraph)
 library(ggraph)
@@ -467,3 +467,4 @@ ggsave(
 )
 
 total_graph
+
